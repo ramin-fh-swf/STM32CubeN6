@@ -1,0 +1,50 @@
+# Build folders
+/STM32CubeIDE/AppS/Debug/
+/STM32CubeIDE/AppS/Release/
+/STM32CubeIDE/AppS/build/
+
+/STM32CubeIDE/Boot/Debug/
+/STM32CubeIDE/Boot/Release/
+/STM32CubeIDE/Boot/build/
+
+# STM32CubeIDE spezifisch
+.settings/
+.metadata/
+
+# Eclipse / IDE files
+*.launch
+.cproject
+.project
+
+# Optional: Wenn du persönliche Settings NICHT teilen willst
+# (Achtung: Kann Teamarbeit beeinflussen)
+# .cproject
+# .project
+
+# Generated files
+*.o
+*.d
+*.elf
+*.bin
+*.map
+*.list
+*.hex
+
+# Logs
+*.log
+
+# Temporary files
+*~
+*.swp
+*.tmp
+
+# CubeMX Backup Files
+*.ioc.backup
+
+# ST-LINK / Flash logs
+*.stlink
+
+# OS spezifisch
+.DS_Store
+Thumbs.db
+
