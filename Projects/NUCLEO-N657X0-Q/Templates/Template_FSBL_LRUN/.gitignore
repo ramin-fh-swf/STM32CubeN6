@@ -13,8 +13,6 @@
 
 # Eclipse / IDE files
 *.launch
-.cproject
-.project
 
 # Optional: Wenn du persönliche Settings NICHT teilen willst
 # (Achtung: Kann Teamarbeit beeinflussen)
