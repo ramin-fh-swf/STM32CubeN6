@@ -7,6 +7,7 @@ extern "C"
 #endif
 
 void rm_init_calculate_print_freqs(void);
+void rm_init_uart(void);
 
 #ifdef __cplusplus
 }

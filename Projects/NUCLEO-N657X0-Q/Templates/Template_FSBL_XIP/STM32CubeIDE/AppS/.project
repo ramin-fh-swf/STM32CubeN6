@@ -32,9 +32,24 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Inc</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Appli/Inc</locationURI>
+		</link>
+		<link>
+			<name>Inc/rm_init.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/RM/Inc/rm_init.h</locationURI>
+		</link>
+		<link>
 			<name>Src/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Src/main.c</locationURI>
+		</link>
+		<link>
+			<name>Src/rm_init.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/RM/Src/rm_init.c</locationURI>
 		</link>
 		<link>
 			<name>Src/stm32n6xx_hal_msp.c</name>
@@ -60,6 +75,11 @@
 			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cacheaxi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_cacheaxi.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.c</name>
@@ -90,6 +110,16 @@
 			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart_ex.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

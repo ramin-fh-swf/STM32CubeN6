@@ -77,5 +77,25 @@ void HAL_MspInit(void)
 }
 
 /* USER CODE BEGIN 1 */
+/**
+  * @brief CACHEAXI MSP Initialization
+  * This function configures the hardware resources used in this example
+  * @param hcacheaxi: CACHEAXI handle pointer
+  * @retval None
+  */
+void HAL_CACHEAXI_MspInit(CACHEAXI_HandleTypeDef* hcacheaxi)
+{
+  if(hcacheaxi->Instance==CACHEAXI)
+  {
+    /* USER CODE BEGIN CACHEAXI_MspInit 0 */
 
+    /* USER CODE END CACHEAXI_MspInit 0 */
+    /* Peripheral clock enable */
+    __HAL_RCC_CACHEAXI_CLK_ENABLE();
+    /* USER CODE BEGIN CACHEAXI_MspInit 1 */
+
+    /* USER CODE END CACHEAXI_MspInit 1 */
+
+  }
+}
 /* USER CODE END 1 */

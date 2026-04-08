@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "rm_init.h"
 
 /* USER CODE END Includes */
 
@@ -42,13 +43,16 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+CACHEAXI_HandleTypeDef hcacheaxi;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 static void MPU_Config(void);
+
 /* USER CODE BEGIN PFP */
 void Error_Handler(void);
+static void MX_CACHEAXI_Init(void);
 
 /* USER CODE END PFP */
 
@@ -84,6 +88,11 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  rm_init_uart();
+  printf("######## AppS ########\n");
+
+  MX_CACHEAXI_Init();
+
   /* Initialize LED1 */
   BSP_LED_Init(LED_GREEN);
   /* USER CODE END Init */
@@ -112,6 +121,32 @@ int main(void)
 }
 
 /* USER CODE BEGIN 4 */
+/**
+  * @brief CACHEAXI Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CACHEAXI_Init(void)
+{
+
+  /* USER CODE BEGIN CACHEAXI_Init 0 */
+
+  /* USER CODE END CACHEAXI_Init 0 */
+
+  /* USER CODE BEGIN CACHEAXI_Init 1 */
+
+  /* USER CODE END CACHEAXI_Init 1 */
+  hcacheaxi.Instance = CACHEAXI;
+  if (HAL_CACHEAXI_Init(&hcacheaxi) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CACHEAXI_Init 2 */
+  printf(" - CACHEAXI successfully initialized\n");
+
+  /* USER CODE END CACHEAXI_Init 2 */
+
+}
 
 /* USER CODE END 4 */
 

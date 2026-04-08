@@ -8,22 +8,58 @@
 
 #define RM_INIT_DESIRED_CPU_FREQ 800000000u
 
+
+static UART_HandleTypeDef hlpuart1;
+
+static void MX_LPUART1_UART_Init(void)
+{
+  /* USER CODE BEGIN LPUART1_Init 0 */
+  /* USER CODE END LPUART1_Init 0 */
+
+  /* USER CODE BEGIN LPUART1_Init 1 */
+  /* USER CODE END LPUART1_Init 1 */
+
+  hlpuart1.Instance = LPUART1;
+  hlpuart1.Init.BaudRate = 115200;
+  hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
+  hlpuart1.Init.StopBits = UART_STOPBITS_1;
+  hlpuart1.Init.Parity = UART_PARITY_NONE;
+  hlpuart1.Init.Mode = UART_MODE_TX_RX;
+  hlpuart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
+  if (HAL_UART_Init(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&hlpuart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&hlpuart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN LPUART1_Init 2 */
+  /* USER CODE END LPUART1_Init 2 */
+}
+
 void rm_init_calculate_print_freqs(void)
 {
-	/*
-    printf("CPU Clock Frequency: %lu Hz\n", HAL_RCC_GetCpuClockFreq());
-    printf("System Clock Frequency: %lu Hz\n", HAL_RCC_GetSysClockFreq());
-    printf("NPU Clock Frequency: %lu Hz\n", HAL_RCC_GetNPUClockFreq());
-    printf("NPU RAMS Clock Frequency: %lu Hz\n", HAL_RCC_GetNPURAMSClockFreq());
-	*/
+    printf("Clock Frequencies ###\n");
+    printf(" - CPU Clock Frequency:      %lu Hz\n", HAL_RCC_GetCpuClockFreq());
+    printf(" - System Clock Frequency:   %lu Hz\n", HAL_RCC_GetSysClockFreq());
+    printf(" - NPU Clock Frequency:      %lu Hz\n", HAL_RCC_GetNPUClockFreq());
+    printf(" - NPU RAMS Clock Frequency: %lu Hz\n", HAL_RCC_GetNPURAMSClockFreq());
 
-	uint32_t freq = HAL_RCC_GetCpuClockFreq();
-	freq = HAL_RCC_GetSysClockFreq();
-	freq = HAL_RCC_GetNPUClockFreq();
-	freq = HAL_RCC_GetNPURAMSClockFreq();
-	(void)freq;
-
-	/*
+    /*
     uint32_t start_tick = HAL_GetTick();
     uint32_t start_cycles = DWT->CYCCNT;
 
@@ -39,4 +75,23 @@ void rm_init_calculate_print_freqs(void)
     */
 }
 
+void rm_init_uart(void)
+{
+	MX_LPUART1_UART_Init();
+}
+
+
 /* Stub implementations ***************************************************************/
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+
+PUTCHAR_PROTOTYPE
+{
+    HAL_UART_Transmit(&hlpuart1, (uint8_t *)ch, 1, 0xFFFF);
+    return ch;
+}
+
+int _write(int fd, char *ptr, int len)
+{
+    HAL_UART_Transmit(&hlpuart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+    return len;
+}

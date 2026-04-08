@@ -46,7 +46,6 @@
 XSPI_HandleTypeDef hxspi2;
 
 /* USER CODE BEGIN PV */
-UART_HandleTypeDef hlpuart1;
 
 /* USER CODE END PV */
 
@@ -60,7 +59,6 @@ void Error_Handler(void);
 static int32_t OTP_Config(void);
 #endif /* NO_OTP_FUSE */
 
-static void MX_LPUART1_UART_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -109,18 +107,29 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_XSPI2_Init();
+
   /* USER CODE BEGIN 2 */
+  rm_init_uart();
   BSP_LED_Init(LED_BLUE);
+
+  printf("######## FSBL ########\n");
   BSP_LED_On(LED_BLUE);
   rm_init_calculate_print_freqs();
-  MX_LPUART1_UART_Init();
-  char msg[] = "Bootloader started\n";
-  HAL_UART_Transmit(&hlpuart1, (uint8_t *)(msg), sizeof(msg), 10);
+
+  __HAL_RCC_AXISRAM2_MEM_CLK_ENABLE();
+  __HAL_RCC_AXISRAM3_MEM_CLK_ENABLE();
+  __HAL_RCC_AXISRAM4_MEM_CLK_ENABLE();
+  __HAL_RCC_AXISRAM5_MEM_CLK_ENABLE();
+  __HAL_RCC_AXISRAM6_MEM_CLK_ENABLE();
+  printf(" - AXIRAM 2, 3, 4, 5 and 6 are enabled\n");
+  printf(" - Note: Initialize CACHEAXI in the App!!!\n");
+
   BSP_LED_Off(LED_BLUE);
 
   /* Initialise the serial memory */
   MX_EXTMEM_Init();
 
+  printf("Booting App ...\n\n");
   BOOT_Application();
   /* We should never get here as execution is now from user application */
   /* USER CODE END 2 */
@@ -137,7 +146,7 @@ int main(void)
   /* USER CODE END 3 */
 }
 /* USER CODE BEGIN CLK 1 */
- /*         The system Clock is configured as follows :
+ /*         The original system Clock was configured as follows - Now it got changed!!!:
   *            CPU Clock source               = IC1_CK
   *            System bus Clock source        = IC2_IC6_IC11_CK
   *            CPUCLK (sysa_ck) (Hz)          = 600000000
@@ -416,48 +425,6 @@ static int32_t OTP_Config(void)
 #endif /* NO_OTP_FUSE */
 
 
-static void MX_LPUART1_UART_Init(void)
-{
-
-  /* USER CODE BEGIN LPUART1_Init 0 */
-
-  /* USER CODE END LPUART1_Init 0 */
-
-  /* USER CODE BEGIN LPUART1_Init 1 */
-
-  /* USER CODE END LPUART1_Init 1 */
-  hlpuart1.Instance = LPUART1;
-  hlpuart1.Init.BaudRate = 115200;
-  hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
-  hlpuart1.Init.StopBits = UART_STOPBITS_1;
-  hlpuart1.Init.Parity = UART_PARITY_NONE;
-  hlpuart1.Init.Mode = UART_MODE_TX_RX;
-  hlpuart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
-  if (HAL_UART_Init(&hlpuart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&hlpuart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&hlpuart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN LPUART1_Init 2 */
-
-  /* USER CODE END LPUART1_Init 2 */
-
-}
 /* USER CODE END 4 */
 
 /**
