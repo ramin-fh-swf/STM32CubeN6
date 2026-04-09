@@ -6,6 +6,10 @@ extern "C"
 {
 #endif
 
+#include "main.h"
+
+extern UART_HandleTypeDef hlpuart1;
+
 void rm_init_calculate_print_freqs(void);
 void rm_init_uart(void);
 

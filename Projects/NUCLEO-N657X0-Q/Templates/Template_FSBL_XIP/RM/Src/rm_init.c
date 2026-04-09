@@ -9,9 +9,9 @@
 #define RM_INIT_DESIRED_CPU_FREQ 800000000u
 
 
-static UART_HandleTypeDef hlpuart1;
+UART_HandleTypeDef hlpuart1;
 
-static void MX_LPUART1_UART_Init(void)
+void MX_LPUART1_UART_Init(void)
 {
   /* USER CODE BEGIN LPUART1_Init 0 */
   /* USER CODE END LPUART1_Init 0 */
@@ -90,8 +90,9 @@ PUTCHAR_PROTOTYPE
     return ch;
 }
 
-int _write(int fd, char *ptr, int len)
+__weak int _write(int fd, char *ptr, int len)
 {
     HAL_UART_Transmit(&hlpuart1, (uint8_t *)ptr, len, HAL_MAX_DELAY);
     return len;
 }
+

@@ -112,6 +112,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc_ex.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rif.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rif.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart.c</locationURI>
@@ -120,6 +125,26 @@
 			<name>Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ST/AI/Inc</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Middlewares/ST/AI/Inc</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ST/AI/Npu</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Middlewares/ST/AI/Npu</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ST/AI/Misc/Inc</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Middlewares/ST/AI/Misc/Inc</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ST/AI/Misc/Src</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Middlewares/ST/AI/Misc/Src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
