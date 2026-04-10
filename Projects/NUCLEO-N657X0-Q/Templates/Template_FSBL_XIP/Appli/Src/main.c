@@ -120,7 +120,7 @@ int main(void)
     /* Toggle LED1 every 250ms */
     BSP_LED_Toggle(LED_GREEN);
     STM32CubeAI_Studio_AI_Process();
-    HAL_Delay(250);
+    HAL_Delay(5000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
