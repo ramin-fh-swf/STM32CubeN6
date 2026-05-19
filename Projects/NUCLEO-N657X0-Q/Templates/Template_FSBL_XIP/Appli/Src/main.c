@@ -151,6 +151,7 @@ static void MX_CACHEAXI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CACHEAXI_Init 2 */
+  //npu_cache_enable();
   printf(" - CACHEAXI successfully initialized\n");
 
   /* USER CODE END CACHEAXI_Init 2 */

@@ -24,17 +24,17 @@
  *
  * Command Line options:
  * --load-mdesc-file = "/opt/ST/STEdgeAI/2.2/Utilities/configs/stm32n6"
- * --load-mpool-file = "/home/rama/STM32CubeAi/test_lenet5/.ai/memory_pool"
+ * --load-mpool-file = "/home/rama/STM32CubeAi/test_lenet5_stedgeai_2_2/.ai/run/run-1/.ai/memory_pool"
  * --cache-maintenance = true
  * --enable-virtual-mem-pools = true
  * --native-float = true
- * --json-quant-file = "/home/rama/STM32CubeAi/test_lenet5/.ai/st_ai_output/lenet5_mnist_pruned_quantized_OE_3_3_0_Q.json"
+ * --json-quant-file = "/home/rama/STM32CubeAi/test_lenet5_stedgeai_2_2/.ai/run/run-1/.ai/st_ai_output/lenet5_mnist_pruned_quantized_OE_3_3_0_Q.json"
  * --Os = true
  * --Ocache-opt = true
  * --enable-epoch-controller = true
  * --output-info-file = "c_info"
- * --onnx-input = "/home/rama/STM32CubeAi/test_lenet5/.ai/st_ai_output/lenet5_mnist_pruned_quantized_OE_3_3_0.onnx"
- * --out-dir-prefix = "/home/rama/STM32CubeAi/test_lenet5/.ai/st_ai_ws/neural_art__network/"
+ * --onnx-input = "/home/rama/STM32CubeAi/test_lenet5_stedgeai_2_2/.ai/run/run-1/.ai/st_ai_output/lenet5_mnist_pruned_quantized_OE_3_3_0.onnx"
+ * --out-dir-prefix = "/home/rama/STM32CubeAi/test_lenet5_stedgeai_2_2/.ai/run/run-1/.ai/st_ai_ws/neural_art__network/"
  * --mvei = true
  * --Oauto-sched = true
  *
@@ -60,7 +60,8 @@
 /* global pool 7 is ? */
 /* index=7 file postfix=xSPI1 name=hyperRAM offset=0x90000000  absolute_mode size=33554424 READ_WRITE THROUGHPUT=MID LATENCY=HIGH byte width=2 freq ratio=5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=ON read_power=380 write_power=340 use4initializers=YES score=82  */
 /* global pool 8 is 19.01 KB */
-/* index=8 file postfix=xSPI2 name=octoFlash offset=0x71000000  absolute_mode size=117440504 READ_ONLY THROUGHPUT=MID LATENCY=HIGH byte width=1 freq ratio=6 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=ON read_power=110 write_power=400 use4initializers=YES score=50  */
+/* index=8 file postfix=xSPI2 name=octoFlash offset=0x71000000  relative_mode size=117440512 READ_ONLY THROUGHPUT=MID LATENCY=HIGH byte width=1 freq ratio=6 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=ON read_power=110 write_power=400 use4initializers=YES score=50  */
+extern unsigned char _mem_pool_xSPI2_Default[]; /* [19468]; */
 /* global pool 1 is 1.61 KB */
 /* index=1 file postfix=AXISRAM5 name=npuRAM5 offset=0x342e0000  absolute_mode size=458752 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=18.531 write_power=16.201 use4initializers=NO score=94  */
 /* global pool 2 is ? */
@@ -214,7 +215,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
 #if LL_ATON_DBG_BUFFER_INFO_EXCLUDED == 0
     {
       .name = "Gemm_13_weights_transposed_3",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 0,
       .offset_end = 14598,
       .offset_limit = 14664,
@@ -238,7 +239,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
     },
     {
       .name = "Gemm_14_weights_transposed_9",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 14608,
       .offset_end = 16546,
       .offset_limit = 16616,
@@ -262,7 +263,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
     },
     {
       .name = "Gemm_15_weights_transposed_15",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 18960,
       .offset_end = 19302,
       .offset_limit = 19368,
@@ -286,7 +287,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
     },
     {
       .name = "Conv2D_4_weights_submask_0_0_0_0_6_1_3_5_64",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 19312,
       .offset_end = 19402,
       .offset_limit = 19472,
@@ -310,7 +311,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
     },
     {
       .name = "Conv2D_4_weights_submask_0_0_3_0_6_1_2_5_65",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 19408,
       .offset_end = 19468,
       .offset_limit = 19536,
@@ -334,7 +335,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
     },
     {
       .name = "Conv2D_8_weights_submask_0_0_0_0_16_6_3_5_66",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 16560,
       .offset_end = 18000,
       .offset_limit = 18064,
@@ -358,7 +359,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
     },
     {
       .name = "Conv2D_8_weights_submask_0_0_3_0_16_6_2_5_67",
-      .addr_base = {(unsigned char *)(0x71000000UL) /* Equivalent hex address = 0x71000000UL */},
+      .addr_base = {(unsigned char *)ATON_LIB_VIRTUAL_TO_PHYSICAL_ADDR((uintptr_t)_mem_pool_xSPI2_Default)},
       .offset_start = 18000,
       .offset_end = 18960,
       .offset_limit = 19024,

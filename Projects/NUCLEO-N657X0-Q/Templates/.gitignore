@@ -1,5 +1,7 @@
 # Build folders
 /*/STM32CubeIDE/AppS/Debug/
+/*/STM32CubeIDE/AppS/Debug_LENET5/
+/*/STM32CubeIDE/AppS/Debug_YAMNET/
 /*/STM32CubeIDE/AppS/Release/
 /*/STM32CubeIDE/AppS/build/
 

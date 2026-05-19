@@ -37,19 +37,19 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Inc</locationURI>
 		</link>
 		<link>
-			<name>Inc/rm_init.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/RM/Inc/rm_init.h</locationURI>
+			<name>RM/Inc</name>
+			<type>2</type>
+			<location>/home/rama/dev_own/ai-thesis/submodules/STM32CubeN6/Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/RM/Inc</location>
+		</link>
+		<link>
+			<name>RM/Src</name>
+			<type>2</type>
+			<location>/home/rama/dev_own/ai-thesis/submodules/STM32CubeN6/Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/RM/Src</location>
 		</link>
 		<link>
 			<name>Src/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Src/main.c</locationURI>
-		</link>
-		<link>
-			<name>Src/rm_init.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/RM/Src/rm_init.c</locationURI>
 		</link>
 		<link>
 			<name>Src/stm32n6xx_hal_msp.c</name>
@@ -135,6 +135,11 @@
 			<name>Middlewares/ST/AI/Npu</name>
 			<type>2</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Middlewares/ST/AI/Npu</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ST/AI/Lib/NetworkRuntime1020_CM55_GCC.a</name>
+			<type>2</type>
+			<location>/home/rama/dev_own/ai-thesis/submodules/STM32CubeN6/Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/Middlewares/ST/AI/Lib/NetworkRuntime1020_CM55_GCC.a</location>
 		</link>
 		<link>
 			<name>Middlewares/ST/AI/Misc/Inc</name>

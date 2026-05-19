@@ -1,0 +1,102 @@
+/*
+ * rm_ai_lenet5.c
+ *
+ *  Created on: 19.05.2026
+ *      Author: rama
+ */
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <inttypes.h>
+#include <string.h>
+
+#include "app_x-cube-ai.h"
+#include "bsp_ai.h"
+#include "stai.h"
+#include "npu_init.h"
+
+#include "rm_ai.h"
+#include "mnist_input_label_0.h"
+#include "mnist_input_label_3.h"
+#include "mnist_input_label_5.h"
+#include "mnist_input_label_7.h"
+#include "mnist_input_label_9.h"
+
+static int get_prediction(int8_t *output, int len) // TODo: move to rm_ai
+{
+    int max_idx = 0;
+    int8_t max_val = output[0];
+
+    for (int i = 1; i < len; i++)
+    {
+        if (output[i] > max_val)
+        {
+            max_val = output[i];
+            max_idx = i;
+        }
+    }
+
+    return max_idx;
+}
+
+void rm_ai_lenet5_preprocess(const NN_Instance_TypeDef *nn_instance)
+{
+    static const uint8_t max_labels = 5;
+    static uint8_t counter = 0;
+
+    const LL_Buffer_InfoTypeDef *inputBuffersInfos = LL_ATON_Input_Buffers_Info(nn_instance);
+    uint8_t *buffer_in = (uint8_t *)LL_Buffer_addr_start(inputBuffersInfos);
+    uint32_t buffer_len = LL_Buffer_len(inputBuffersInfos); // should be 28*28 = 784 for lenet5
+
+    memset(buffer_in, 0, buffer_len);
+
+    if (counter == 0)
+    {
+        memcpy(buffer_in, mnist_input_label_0, 784);
+    }
+    else if (counter == 1)
+    {
+        memcpy(buffer_in, mnist_input_label_3, 784);
+    }
+    else if (counter == 2)
+    {
+        memcpy(buffer_in, mnist_input_label_5, 784);
+    }
+    else if (counter == 3)
+    {
+        memcpy(buffer_in, mnist_input_label_7, 784);
+    }
+    else if (counter == 4)
+    {
+        memcpy(buffer_in, mnist_input_label_9, 784);
+    }
+    else
+    {
+        // ERROR
+    }
+
+    SCB_CleanDCache_by_Addr((uint32_t *)buffer_in, buffer_len);
+    counter++;
+    if (counter >= max_labels)
+    {
+        counter = 0;
+    }
+}
+
+void rm_ai_lenet5_postprocess(const NN_Instance_TypeDef *nn_instance)
+{
+    const LL_Buffer_InfoTypeDef *outputBuffersInfos = LL_ATON_Output_Buffers_Info(nn_instance);
+    uint8_t *buffer_out = (uint8_t *)LL_Buffer_addr_start(outputBuffersInfos);
+
+    static int8_t output_value[10];
+    SCB_InvalidateDCache_by_Addr((uint32_t *)buffer_out, 32);
+    memcpy(output_value, buffer_out, sizeof(output_value));
+    for (int i = 0; i < 10; i++)
+    {
+        printf("Output value %d: %d\n", i, (int8_t)output_value[i]);
+    }
+
+    int pred = get_prediction(output_value, 10);
+    printf("Predicted class: %d\n\n", pred);
+}
