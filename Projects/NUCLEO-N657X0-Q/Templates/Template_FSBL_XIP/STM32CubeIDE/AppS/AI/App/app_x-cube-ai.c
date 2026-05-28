@@ -41,6 +41,7 @@
 #include "bsp_ai.h"
 #include "stai.h"
 #include "npu_init.h"
+#include "aiTestUtility.h"
 
 /* USER CODE BEGIN includes */
 
@@ -72,8 +73,7 @@ LL_ATON_DECLARE_NAMED_NN_INSTANCE_AND_INTERFACE(Default)
 uint8_t *buffer_in;
 uint8_t *buffer_out;
 
-
-static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer)  //TODO: move to rm_ai
+static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer) //TODO: move to rm_ai
 {
     if (buffer == NULL)
     {
@@ -191,15 +191,10 @@ int post_process()
     return 0;
 }
 
-static void test_func(void)
-{
-    printf("test func called!\n");
-}
-
 const inter_hal_func_t obj =
-{
-    .init = test_func,
-};
+{ .init = cyclesCounterInit, .start_counter = cyclesCounterStart,
+        .stop_counter = cyclesCounterEnd, .counter_val_to_float_ms =
+                dwtCyclesToFloatMs, };
 
 /* Entry points --------------------------------------------------------------*/
 
@@ -216,16 +211,24 @@ void STM32CubeAI_Studio_AI_Init(void)
     /* USER CODE END 5 */
 }
 
+volatile static inter_hal_statistic_inference_t report;
 void STM32CubeAI_Studio_AI_Process(void)
 {
-    /* 1 - Acquire, pre-process and fill the input buffers */
-    acquire_and_process_data();
+    for (int i = 0; i < 100; i++)
+    {
+        /* 1 - Acquire, pre-process and fill the input buffers */
+        acquire_and_process_data();
 
-    /* 2 - Call inference engine */
-    aiRun();
+        /* 2 - Call inference engine */
+        inter_hal_start_counter(); // cyclesCounterStart();
+        aiRun();
+        float duration = inter_hal_get_counter(); //dur = dwtCyclesToFloatMs(cyclesCounterEnd());
+        inter_hal_feed_statistic_inference_duration(duration);
 
-    /* 3 - Post-process the predictions */
-    post_process();
+        /* 3 - Post-process the predictions */
+        post_process();
+    }
+    report = inter_hal_finalize_statistic_inference_duration();
 }
 
 void STM32CubeAI_Studio_AI_Deinit(void)

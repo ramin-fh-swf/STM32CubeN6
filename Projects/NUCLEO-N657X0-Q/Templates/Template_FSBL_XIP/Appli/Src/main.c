@@ -115,12 +115,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   STM32CubeAI_Studio_AI_Init();
   printf("App init done ...\n\n;");
+
+  STM32CubeAI_Studio_AI_Process();
+
   while (1)
   {
     /* Toggle LED1 every 250ms */
+    HAL_Delay(250);
     BSP_LED_Toggle(LED_GREEN);
-    STM32CubeAI_Studio_AI_Process();
-    HAL_Delay(5000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
