@@ -67,6 +67,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Appli/Src/system_stm32n6xx_s.c</locationURI>
 		</link>
 		<link>
+			<name>interface-hal/inc</name>
+			<type>2</type>
+			<location>/home/rama/dev_own/ai-thesis/submodules/STM32CubeN6/Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/submodule/inference-hal/inc</location>
+		</link>
+		<link>
+			<name>interface-hal/src</name>
+			<type>2</type>
+			<location>/home/rama/dev_own/ai-thesis/submodules/STM32CubeN6/Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/submodule/inference-hal/src</location>
+		</link>
+		<link>
 			<name>Drivers/BSP/stm32n6xx_nucleo.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32N6xx_Nucleo/stm32n6xx_nucleo.c</locationURI>

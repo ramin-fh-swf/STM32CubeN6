@@ -52,7 +52,7 @@
  #include <mnist_input_label_9.h>
  */
 
-
+#include "inter_hal.h"
 #include "rm_ai_yamnet.h"
 #include "rm_ai_lenet5.h"
 
@@ -191,6 +191,16 @@ int post_process()
     return 0;
 }
 
+static void test_func(void)
+{
+    printf("test func called!\n");
+}
+
+const inter_hal_func_t obj =
+{
+    .init = test_func,
+};
+
 /* Entry points --------------------------------------------------------------*/
 
 void STM32CubeAI_Studio_AI_Init(void)
@@ -199,6 +209,8 @@ void STM32CubeAI_Studio_AI_Init(void)
     aiPreInitialize();
 
     /* USER CODE BEGIN 5 */
+    inter_hal_create(&obj);
+    inter_hal_init();
     aiInit();
 
     /* USER CODE END 5 */
