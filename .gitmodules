@@ -62,3 +62,6 @@
 	path = Drivers/BSP/STM32N6570-DK
 	url = https://github.com/STMicroelectronics/stm32n6570-dk-bsp
 	branch = main
+[submodule "Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/submodule/inference-hal"]
+	path = Projects/NUCLEO-N657X0-Q/Templates/Template_FSBL_XIP/submodule/inference-hal
+	url = git@github.com:ramin-fh-swf/inference-hal.git
