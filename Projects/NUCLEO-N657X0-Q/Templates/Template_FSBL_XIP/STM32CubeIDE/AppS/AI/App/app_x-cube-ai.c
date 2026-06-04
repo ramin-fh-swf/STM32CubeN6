@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "app_x-cube-ai.h"
 #include "bsp_ai.h"
@@ -44,16 +45,9 @@
 #include "aiTestUtility.h"
 
 /* USER CODE BEGIN includes */
-
-/*
- #include <mnist_input_label_0.h>
- #include <mnist_input_label_3.h>
- #include <mnist_input_label_5.h>
- #include <mnist_input_label_7.h>
- #include <mnist_input_label_9.h>
- */
-
+#include "inference_conf.h"
 #include "inter_hal.h"
+#include "stm_inference_profiler.h"
 #include "rm_ai_yamnet.h"
 #include "rm_ai_lenet5.h"
 
@@ -68,7 +62,6 @@
 /* Activations buffers -------------------------------------------------------*/
 
 /* Entry points --------------------------------------------------------------*/
-
 LL_ATON_DECLARE_NAMED_NN_INSTANCE_AND_INTERFACE(Default)
 uint8_t *buffer_in;
 uint8_t *buffer_out;
@@ -125,7 +118,10 @@ int aiInit(void)
     buffer_in = (uint8_t*) LL_Buffer_addr_start(&inputBuffersInfos[0]);
     buffer_out = (uint8_t*) LL_Buffer_addr_start(&outputBuffersInfos[0]);
 
-    printf("Parsing input buffer info:\n");
+    printf("\n***************************************************\n");
+    printf("Model name: %s\n", LL_ATON_DEFAULT_ORIGIN_MODEL_NAME);
+    printf("Model size: XX kB -> ToDo");
+    printf("\nParsing input buffer info:\n");
     printf("Input buffer address: 0x%p\n", (void*) buffer_in);
     parse_io_buffer(&inputBuffersInfos[0]);
 
@@ -133,8 +129,10 @@ int aiInit(void)
     printf("Output buffer address: 0x%p\n", (void*) buffer_out);
     parse_io_buffer(&outputBuffersInfos[0]);
 
-    LL_ATON_RT_Init_Network(&NN_Instance_Default);
     LL_ATON_RT_RuntimeInit();
+    LL_ATON_RT_Init_Network(&NN_Instance_Default);
+    LL_ATON_RT_SetNetworkCallback(&NN_Instance_Default,
+            stm_inference_profiler_on_epoch_event);
     return 0;
 }
 
@@ -211,24 +209,66 @@ void STM32CubeAI_Studio_AI_Init(void)
     /* USER CODE END 5 */
 }
 
-volatile static inter_hal_statistic_inference_t report;
+volatile static inter_hal_statistic_inference_t report_hal;
+static stm_profiler_statistic_t report_prof;
+
 void STM32CubeAI_Studio_AI_Process(void)
 {
-    for (int i = 0; i < 100; i++)
+    stm_inference_profiler_init();
+    for (int i = 0; i < INFERENCE_CONF_INFERENZ_COUNT; i++)
     {
         /* 1 - Acquire, pre-process and fill the input buffers */
         acquire_and_process_data();
 
         /* 2 - Call inference engine */
-        inter_hal_start_counter(); // cyclesCounterStart();
+        inter_hal_start_counter();
+        stm_inference_profiler_begin();
+
         aiRun();
+
+        stm_inference_profiler_end();
         float duration = inter_hal_get_counter(); //dur = dwtCyclesToFloatMs(cyclesCounterEnd());
         inter_hal_feed_statistic_inference_duration(duration);
-
-        /* 3 - Post-process the predictions */
-        post_process();
     }
-    report = inter_hal_finalize_statistic_inference_duration();
+
+    /* 3 - Post-process the predictions */
+    post_process();
+
+    /* --- Statistik nach allen Inferenzen berechnen --- */
+    report_hal = inter_hal_finalize_statistic_inference_duration();
+    stm_inference_profiler_finalize(&report_prof); /* war: einzelne Getter */
+
+    /* --- Ausgabe (jetzt mit Median + Stddev, analog PSoC) --- */
+    printf("\n***************************************************");
+    printf("\r\nInference statistics (inter_hal):\r\n");
+    printf("count=%u  min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
+            (unsigned int) report_hal.inference_count, report_hal.min_time_ms,
+            report_hal.max_time_ms, report_hal.average_time_ms,
+            report_hal.median_time_ms, report_hal.stddev_time_ms);
+
+    printf("\r\nInference statistics (stm_inference_profiler):\r\n");
+    printf("Total : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
+            report_prof.total.min_ms, report_prof.total.max_ms,
+            report_prof.total.average_ms, report_prof.total.median_ms,
+            report_prof.total.stddev_ms);
+    printf(
+            "EC/NPU: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u Bloecke)\r\n",
+            report_prof.ec.min_ms, report_prof.ec.max_ms,
+            report_prof.ec.average_ms, report_prof.ec.median_ms,
+            report_prof.ec.stddev_ms,
+            (unsigned int) report_prof.ec.block_count);
+    printf(
+            "Hybrid: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u Bloecke)\r\n",
+            report_prof.hybrid.min_ms, report_prof.hybrid.max_ms,
+            report_prof.hybrid.average_ms, report_prof.hybrid.median_ms,
+            report_prof.hybrid.stddev_ms,
+            (unsigned int) report_prof.hybrid.block_count);
+    printf(
+            "SW    : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u Bloecke)\r\n",
+            report_prof.sw.min_ms, report_prof.sw.max_ms,
+            report_prof.sw.average_ms, report_prof.sw.median_ms,
+            report_prof.sw.stddev_ms,
+            (unsigned int) report_prof.sw.block_count);
 }
 
 void STM32CubeAI_Studio_AI_Deinit(void)

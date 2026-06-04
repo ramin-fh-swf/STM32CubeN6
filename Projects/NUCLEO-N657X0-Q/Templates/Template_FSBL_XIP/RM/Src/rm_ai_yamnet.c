@@ -44,7 +44,7 @@ void rm_ai_yamnet_preprocess(const NN_Instance_TypeDef *nn_instance)
     uint32_t buffer_len = LL_Buffer_len(inputBuffersInfos); //should be 96*64 = 6144 for yamnet
 
     memset(buffer_in, 0, buffer_len); //ToDo: check if needed
-    memcpy(buffer_in, yamnet_patch_0, buffer_len);
+    memcpy(buffer_in, yamnet_patch_4, buffer_len);
 
     SCB_CleanDCache_by_Addr((uint32_t*) buffer_in, buffer_len);
 }

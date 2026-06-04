@@ -114,7 +114,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   STM32CubeAI_Studio_AI_Init();
-  printf("App init done ...\n\n;");
+  printf("App init done ...\n");
 
   STM32CubeAI_Studio_AI_Process();
 
