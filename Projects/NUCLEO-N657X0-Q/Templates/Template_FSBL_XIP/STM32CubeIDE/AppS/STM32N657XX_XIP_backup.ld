@@ -43,7 +43,7 @@ _sstack = _estack - _Min_Stack_Size;
 /* Memories definition */
 MEMORY
 {
-  ROM    (xrw)    : ORIGIN = 0x70100400,   LENGTH = 64511K /* = 64MB - 1025 K. These 1025 are used for FSBL and Signed Header of Apps. Adapted by Ramin */
+  ROM    (xrw)    : ORIGIN = 0x70100400,   LENGTH = 60M
   RAM    (xrw)    : ORIGIN = 0x34000000,   LENGTH = 2048K
 }
 
@@ -75,14 +75,6 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >ROM
-
-  /* Adapted by Ramin: SG-Veneers direkt hinter den Code -> innerhalb ±16 MB der Secure-Funktionen */
-  .gnu.sgstubs :
-  {
-    . = ALIGN(4);
-    *(.gnu.sgstubs*)   /* Secure Gateway stubs */
-    . = ALIGN(4);
   } >ROM
 
   /* Constant data into "RAM" Ram type memory */
@@ -161,6 +153,13 @@ SECTIONS
     . = ALIGN(8);
     __enoncacheable = .;  /* create symbol for end of section */
   } > RAM
+
+  .gnu.sgstubs :
+  {
+    . = ALIGN(4);
+    *(.gnu.sgstubs*)   /* Secure Gateway stubs */
+    . = ALIGN(4);
+  } >ROM
 
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
