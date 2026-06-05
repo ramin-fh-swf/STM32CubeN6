@@ -95,6 +95,8 @@ int main(void)
 
   rm_init_calculate_print_freqs();
   MX_GPIO_Init();
+
+  /* CACHEAXI is AXISRAM 7 - will be used to cache model content from Flash into RAM */
   MX_CACHEAXI_Init();
 
   /* Initialize LED1 */
