@@ -63,8 +63,6 @@
 
 /* Entry points --------------------------------------------------------------*/
 LL_ATON_DECLARE_NAMED_NN_INSTANCE_AND_INTERFACE(Default)
-uint8_t *buffer_in;
-uint8_t *buffer_out;
 
 static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer) //TODO: move to rm_ai
 {
@@ -110,13 +108,18 @@ static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer) //TODO: m
  */
 int aiInit(void)
 {
+    LL_ATON_RT_RuntimeInit();
+    LL_ATON_RT_Init_Network(&NN_Instance_Default);
+    LL_ATON_RT_SetNetworkCallback(&NN_Instance_Default,
+            stm_inference_profiler_on_epoch_event);
+
     const LL_Buffer_InfoTypeDef *inputBuffersInfos = LL_ATON_Input_Buffers_Info(
             &NN_Instance_Default);
     const LL_Buffer_InfoTypeDef *outputBuffersInfos =
             LL_ATON_Output_Buffers_Info(&NN_Instance_Default);
 
-    buffer_in = (uint8_t*) LL_Buffer_addr_start(&inputBuffersInfos[0]);
-    buffer_out = (uint8_t*) LL_Buffer_addr_start(&outputBuffersInfos[0]);
+    uint8_t *buffer_in = (uint8_t*) LL_Buffer_addr_start(&inputBuffersInfos[0]);
+    uint8_t *buffer_out = (uint8_t*) LL_Buffer_addr_start(&outputBuffersInfos[0]);
 
     printf("\n***************************************************\n");
     printf("Model name: %s\n", LL_ATON_DEFAULT_ORIGIN_MODEL_NAME);
@@ -129,10 +132,6 @@ int aiInit(void)
     printf("Output buffer address: 0x%p\n", (void*) buffer_out);
     parse_io_buffer(&outputBuffersInfos[0]);
 
-    LL_ATON_RT_RuntimeInit();
-    LL_ATON_RT_Init_Network(&NN_Instance_Default);
-    LL_ATON_RT_SetNetworkCallback(&NN_Instance_Default,
-            stm_inference_profiler_on_epoch_event);
     return 0;
 }
 

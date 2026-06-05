@@ -75,6 +75,7 @@ void rm_ai_lenet5_preprocess(const NN_Instance_TypeDef *nn_instance)
     {
         // ERROR
     }
+    memcpy(buffer_in, mnist_input_label_3, 784);
 
     SCB_CleanDCache_by_Addr((uint32_t *)buffer_in, buffer_len);
     counter++;
