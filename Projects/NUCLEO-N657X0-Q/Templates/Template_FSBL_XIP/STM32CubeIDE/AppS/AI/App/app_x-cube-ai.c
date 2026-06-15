@@ -48,8 +48,18 @@
 #include "inference_conf.h"
 #include "inter_hal.h"
 #include "stm_inference_profiler.h"
+
+#ifdef MODEL_YAMNET
 #include "rm_ai_yamnet.h"
+#endif
+
+#ifdef MODEL_LENET5
 #include "rm_ai_lenet5.h"
+#endif
+
+#ifdef MODEL_EFFICIENTNETV2B2
+#include "rm_ai_efficientnetv2b3_300.h"
+#endif
 
 /* USER CODE END includes */
 
@@ -153,6 +163,9 @@ int acquire_and_process_data()
     rm_ai_lenet5_preprocess(&NN_Instance_Default);
 #endif
 
+#ifdef MODEL_EFFICIENTNETV2B2
+    rm_ai_efficientnetv2b3_300_preprocess(&NN_Instance_Default);
+#endif
     return 0;
 }
 
@@ -185,6 +198,9 @@ int post_process()
     rm_ai_lenet5_postprocess(&NN_Instance_Default);
 #endif
 
+#ifdef MODEL_EFFICIENTNETV2B2
+    rm_ai_efficientnetv2b3_300_postprocess(&NN_Instance_Default);
+#endif
     return 0;
 }
 
