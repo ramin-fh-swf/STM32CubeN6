@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include <assert.h>
+#include <efficientnetv2b3_300_inputs_psoc.h>
 #include <float.h>   // FLT_MAX
 
 #include "app_x-cube-ai.h"
@@ -12,7 +13,6 @@
 #include "npu_init.h"
 
 #include "rm_ai.h"
-#include "efficientnetv2b3_300_inputs.h"
 
 #define EFFICIENTNETV2B3_300_OUTPUT_NEUTON_COUNT 1000u
 
@@ -23,15 +23,15 @@ typedef struct best_idx
     int id_best_2;
 } best_idx_t;
 
-static best_idx_t get_prediction(const float *output, int len)
+static best_idx_t get_prediction(const int8_t *output, int len)
 {
     best_idx_t best =
     { -1, -1, -1 };
-    float v0 = -FLT_MAX, v1 = -FLT_MAX, v2 = -FLT_MAX;
+    int8_t v0 = INT8_MIN, v1 = INT8_MIN, v2 = INT8_MIN;
 
     for (int i = 0; i < len; i++)
     {
-        float v = output[i];
+        int8_t v = output[i];
 
         if (v > v0)
         {
@@ -80,19 +80,23 @@ void rm_ai_efficientnetv2b3_300_postprocess(
 {
     const LL_Buffer_InfoTypeDef *outputBuffersInfos =
             LL_ATON_Output_Buffers_Info(nn_instance);
-    uint8_t *buffer_out = (uint8_t*) LL_Buffer_addr_start(outputBuffersInfos);
+    int8_t *buffer_out = (int8_t*) LL_Buffer_addr_start(outputBuffersInfos);
 
-    static float output_value[EFFICIENTNETV2B3_300_OUTPUT_NEUTON_COUNT];
+    static int8_t output_value[EFFICIENTNETV2B3_300_OUTPUT_NEUTON_COUNT];
     SCB_InvalidateDCache_by_Addr((uint32_t*) buffer_out, sizeof(output_value));
     memcpy(output_value, buffer_out, sizeof(output_value));
 
     const best_idx_t best_ids = get_prediction(output_value,
             EFFICIENTNETV2B3_300_OUTPUT_NEUTON_COUNT);
+
+    const float scale = EFFICIENTNETV2_OUTPUT_SCALE;
+    const int   zp    = EFFICIENTNETV2_OUTPUT_ZERO_POINT;
+
     printf("=== Top-3 Prediction ===\n");
     printf("  1. Class %4d  (%.1f %%)\n", best_ids.id_best_0,
-            100.0f * output_value[best_ids.id_best_0]);
+            100.0f * scale * (output_value[best_ids.id_best_0] - zp));
     printf("  2. Class %4d  (%.1f %%)\n", best_ids.id_best_1,
-            100.0f * output_value[best_ids.id_best_1]);
+            100.0f * scale * (output_value[best_ids.id_best_1] - zp));
     printf("  3. Class %4d  (%.1f %%)\n", best_ids.id_best_2,
-            100.0f * output_value[best_ids.id_best_2]);
+            100.0f * scale * (output_value[best_ids.id_best_2] - zp));
 }

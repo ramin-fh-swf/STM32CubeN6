@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    network.h
   * @author  STEdgeAI
-  * @date    2026-06-04 22:31:36
+  * @date    2026-06-15 20:34:14
   * @brief   Minimal description of the generated c-implemention of the network
   ******************************************************************************
   * @attention
@@ -20,7 +20,7 @@
 
 /******************************************************************************/
 #define LL_ATON_DEFAULT_C_MODEL_NAME        "Default"
-#define LL_ATON_DEFAULT_ORIGIN_MODEL_NAME   "efficientnetv2b3_300_int8"
+#define LL_ATON_DEFAULT_ORIGIN_MODEL_NAME   "efficientnetv2b3_300_int8_i8in"
 
 /************************** USER ALLOCATED IOs ********************************/
 // No user allocated inputs
@@ -34,8 +34,8 @@
 
 /************************** OUTPUTS *******************************************/
 #define LL_ATON_DEFAULT_OUT_NUM        (1)    // Total number of output buffers
-// Output buffer 1 -- Dequantize_1025_out_0
+// Output buffer 1 -- Quantize_1020_out_0
 #define LL_ATON_DEFAULT_OUT_1_ALIGNMENT   (32)
-#define LL_ATON_DEFAULT_OUT_1_SIZE_BYTES  (4000)
+#define LL_ATON_DEFAULT_OUT_1_SIZE_BYTES  (1000)
 
 #endif /* LL_ATON_DEFAULT_H */
