@@ -219,6 +219,13 @@ void STM32CubeAI_Studio_AI_Init(void)
     /* USER CODE BEGIN 5 */
     inter_hal_create(&obj);
     inter_hal_init();
+
+    stm_profiler_inference_pins_t inference_pins = {
+        .led_pin = { .port = LED3_GPIO_PORT, .pin = LED3_PIN }, /* Green LED */
+        .signal_pin = { .port = LED1_GPIO_PORT, .pin = LED1_PIN } /* ToDo: change it to a signal pin*/
+    };
+
+    stm_inference_profiler_init(inference_pins);
     aiInit();
 
     /* USER CODE END 5 */
@@ -229,8 +236,12 @@ static stm_profiler_statistic_t report_prof;
 
 void STM32CubeAI_Studio_AI_Process(void)
 {
-    stm_inference_profiler_init();
-    for (int i = 0; i < INFERENCE_CONF_INFERENZ_COUNT; i++)
+    stm_inference_profiler_set_inference_pins();
+    int inference_count =
+        STM_PROFILER_MAX_SAMPLES < INFERENCE_CONF_INFERENZ_COUNT
+            ? STM_PROFILER_MAX_SAMPLES
+            : INFERENCE_CONF_INFERENZ_COUNT;
+    for (int i = 0; i < inference_count; i++)
     {
         /* 1 - Acquire, pre-process and fill the input buffers */
         acquire_and_process_data();
@@ -245,6 +256,8 @@ void STM32CubeAI_Studio_AI_Process(void)
         float duration = inter_hal_get_counter(); //dur = dwtCyclesToFloatMs(cyclesCounterEnd());
         inter_hal_feed_statistic_inference_duration(duration);
     }
+
+    stm_inference_profiler_clear_inference_pins();
 
     /* 3 - Post-process the predictions */
     post_process();

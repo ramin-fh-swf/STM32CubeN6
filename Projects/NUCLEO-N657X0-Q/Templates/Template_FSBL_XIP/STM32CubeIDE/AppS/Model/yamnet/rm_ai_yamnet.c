@@ -43,7 +43,10 @@ void rm_ai_yamnet_preprocess(const NN_Instance_TypeDef *nn_instance)
     uint8_t *buffer_in = (uint8_t*) LL_Buffer_addr_start(inputBuffersInfos);
     uint32_t buffer_len = LL_Buffer_len(inputBuffersInfos); //should be 96*64 = 6144 for yamnet
 
-    memset(buffer_in, 0, buffer_len);
+    /* Die folgenden Funktionen haben in der Vergangenheit zu einem Hardfault geführt.
+     * Problem war die fehlende MPU_Config().
+     * Für mehr Infos sehe die Doku: nucleo-n657x0-q/projects/Template_FSBL_XIP/README.md  */
+    memset((uint32_t*)buffer_in, 0, buffer_len);
     memcpy(buffer_in, yamnet_patch_4, buffer_len);
     SCB_CleanDCache_by_Addr((uint32_t*) buffer_in, buffer_len);
 }
