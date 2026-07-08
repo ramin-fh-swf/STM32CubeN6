@@ -58,6 +58,15 @@ void rm_init_calculate_print_freqs(void)
     printf(" - System Clock Frequency:   %lu Hz\n", HAL_RCC_GetSysClockFreq());
     printf(" - NPU Clock Frequency:      %lu Hz\n", HAL_RCC_GetNPUClockFreq());
     printf(" - NPU RAMS Clock Frequency: %lu Hz\n", HAL_RCC_GetNPURAMSClockFreq());
+    printf(" - XSPI2 (Flash) SCK = %lu Hz\n", HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_XSPI2));
+    printf(" - VCORE Voltage Scaling:    %s\n",
+           (HAL_PWREx_GetVoltageRange() == PWR_REGULATOR_VOLTAGE_SCALE0) ? "SCALE0 (overdrive)" : "SCALE1 (nominal)");
+    printf(" - VOSCR raw = 0x%08lX | VOSreq=%s VOSRDY=%lu ACTVOS=%s ACTVOSRDY=%lu\n",
+           PWR->VOSCR,
+           (PWR->VOSCR & PWR_VOSCR_VOS)       ? "SCALE0" : "SCALE1",
+           (PWR->VOSCR & PWR_VOSCR_VOSRDY)    ? 1UL : 0UL,
+           (PWR->VOSCR & PWR_VOSCR_ACTVOS)    ? "SCALE0" : "SCALE1",
+           (PWR->VOSCR & PWR_VOSCR_ACTVOSRDY) ? 1UL : 0UL);
 
     /*
     uint32_t start_tick = HAL_GetTick();

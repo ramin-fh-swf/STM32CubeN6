@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "rm_init.h"
 #include "app_x-cube-ai.h"
+#include "inference_conf.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +56,7 @@ void Error_Handler(void);
 static void MX_CACHEAXI_Init(void);
 static void MX_GPIO_Init(void);
 static void SystemIsolation_Config(void);
+static void SystemClock_Config_AppCpu(void);
 
 /* USER CODE END PFP */
 
@@ -90,6 +92,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  SystemClock_Config_AppCpu();
   rm_init_uart();
   printf("######## AppS ########\n");
 
@@ -293,6 +296,116 @@ void Error_Handler(void)
   {
   }
   /* USER CODE END Error_Handler_Debug */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config_AppCpu(void) // CPU + optional sysb/sysc/sysd, App-seitig
+{
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /* WICHTIG: PLL1/PLL2 (2400 MHz, von der FSBL gesetzt) bleiben unberührt.
+   * Einzige PLL-Aktion hier ist das Einschalten der unabhängigen PLL3 (nur Config 4);
+   * dabei stehen PLL1/2/4 auf RCC_PLL_NONE -> HAL_RCC_OscConfig fasst sie nicht an
+   * (die HAL verweigert zudem das Rekonfigurieren einer in Benutzung befindlichen PLL).
+   * Kein Reconfigure von PLL1/PLL2 -> kein Glitch der laufenden XIP-/CPU-Takte. */
+
+  /* --- VCORE-Overdrive für Maximalfrequenz (nur wenn die Config es verlangt) ---
+   * Reihenfolge zwingend: erst Spannung hoch, DANN Frequenz.
+   *   1) PB12 high -> externer SMPS liefert höhere VCORE (Board MB1940 ab Rev C01)
+   *   2) VOS SCALE0 -> interner Betriebspunkt "highest performance" (+ VOSRDY-Handshake)
+   * HAL_PWREx_ConfigSupply(EXTERNAL) ist bereits von der FSBL gesetzt und persistiert. */
+#if defined(INFERENCE_CONF_VCORE_OVERDRIVE) && (INFERENCE_CONF_VCORE_OVERDRIVE == 1U)
+  BSP_SMPS_Init(SMPS_VOLTAGE_OVERDRIVE);
+  HAL_Delay(1);   /* externer SMPS muss VCORE hochrampen, bevor VOS0 angefordert wird
+                   * (sonst latcht der ACTVOS-Übergang nicht -> bleibt SCALE1) */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+#endif
+
+  /* --- Dedizierte NPU-PLL (PLL3 = 2000 MHz) einschalten, nur wenn die Config sie nutzt ---
+   * Nur PLL3 wird angefasst; PLL1/PLL2/PLL4 = RCC_PLL_NONE -> unberührt (kein XIP-Glitch).
+   * Muss vor dem Trio stehen (OscConfig wartet auf PLL3-Lock), damit IC6 <- PLL3 gültig ist. */
+#if defined(IC6_ENABLE_PLL3) && (IC6_ENABLE_PLL3 == 1U)
+  {
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_NONE; /* HSI etc. nicht antasten     */
+    RCC_OscInitStruct.PLL1.PLLState  = RCC_PLL_NONE;            /* laufende PLLs in Ruhe lassen */
+    RCC_OscInitStruct.PLL2.PLLState  = RCC_PLL_NONE;
+    RCC_OscInitStruct.PLL4.PLLState  = RCC_PLL_NONE;
+    RCC_OscInitStruct.PLL3.PLLState  = RCC_PLL_ON;              /* nur PLL3 = 2000 MHz */
+    RCC_OscInitStruct.PLL3.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.PLL3.PLLM = 4;    /* 64 MHz / 4 = 16 MHz PLL-Eingang */
+    RCC_OscInitStruct.PLL3.PLLN = 125;  /* 16 MHz * 125 = 2000 MHz VCO     */
+    RCC_OscInitStruct.PLL3.PLLFractional = 0;
+    RCC_OscInitStruct.PLL3.PLLP1 = 1;
+    RCC_OscInitStruct.PLL3.PLLP2 = 1;   /* 2000 / (1*1) = 2000 MHz         */
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+      Error_Handler();
+    }
+  }
+#endif
+
+  /* --- Dedizierte NPURAM-PLL (PLL4 = 1800 MHz) einschalten, nur wenn die Config sie nutzt ---
+   * Gleiche Sicherheit wie PLL3: nur PLL4 an, PLL1/2/3 = RCC_PLL_NONE -> unberührt.
+   * (PLL3 kann parallel schon laufen; NONE bedeutet 'nicht antasten'.) */
+#if defined(IC11_ENABLE_PLL4) && (IC11_ENABLE_PLL4 == 1U)
+  {
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_NONE;
+    RCC_OscInitStruct.PLL1.PLLState  = RCC_PLL_NONE;
+    RCC_OscInitStruct.PLL2.PLLState  = RCC_PLL_NONE;
+    RCC_OscInitStruct.PLL3.PLLState  = RCC_PLL_NONE;
+    RCC_OscInitStruct.PLL4.PLLState  = RCC_PLL_ON;              /* nur PLL4 = 1800 MHz */
+    RCC_OscInitStruct.PLL4.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.PLL4.PLLM = 8;    /* 64 MHz / 8 = 8 MHz PLL-Eingang */
+    RCC_OscInitStruct.PLL4.PLLN = 225;  /* 8 MHz * 225 = 1800 MHz VCO     */
+    RCC_OscInitStruct.PLL4.PLLFractional = 0;
+    RCC_OscInitStruct.PLL4.PLLP1 = 1;
+    RCC_OscInitStruct.PLL4.PLLP2 = 1;   /* 1800 / (1*1) = 1800 MHz        */
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+      Error_Handler();
+    }
+  }
+#endif
+
+  /* --- CPU-Domäne (sysa_ck / IC1 aus PLL2), Teiler aus inference_conf.h --- */
+  RCC_ClkInitStruct.ClockType    = RCC_CLOCKTYPE_CPUCLK;
+  RCC_ClkInitStruct.CPUCLKSource = RCC_CPUCLKSOURCE_IC1;
+  RCC_ClkInitStruct.IC1Selection.ClockSelection = RCC_ICCLKSOURCE_PLL2;
+  RCC_ClkInitStruct.IC1Selection.ClockDivider   = IC1_CLOCK_DIVIDER;
+
+  /* --- CPURAM/NPU/NPURAM (sysb/sysc/sysd = IC2/IC6/IC11) ---
+   * Der SYSCLK-Trio wird nur (re-)konfiguriert, wenn alle drei Teiler definiert
+   * sind, sonst bleiben sysb/sysc/sysd auf den von der FSBL gesetzten Bootwerten.
+   * IC2 kommt aus PLL1 (2400 MHz); IC6 (NPU) aus PLL1 oder PLL3 (2000 -> 1000 MHz);
+   * IC11 (NPURAM) aus PLL1 oder PLL4 (1800 -> 900 MHz). PLL3/PLL4 oben zugeschaltet.
+   * HINWEIS: IC2 (sysb/AXI) ist der Bus, ueber den die CPU XIP-Instruktionen holt.
+   *          Weicht IC2_CLOCK_DIVIDER vom FSBL-Bootwert ab, wird dieser Bus live
+   *          umgeteilt (glitchlos; Flash-Timing haengt an IC3 -> unkritisch, aber
+   *          pro Config testen). */
+#if defined(IC2_CLOCK_DIVIDER) && defined(IC6_CLOCK_DIVIDER) && defined(IC11_CLOCK_DIVIDER)
+  RCC_ClkInitStruct.ClockType   |= RCC_CLOCKTYPE_SYSCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_IC2_IC6_IC11;
+  RCC_ClkInitStruct.IC2Selection.ClockSelection  = RCC_ICCLKSOURCE_PLL1; /* CPURAM/sysb */
+  RCC_ClkInitStruct.IC2Selection.ClockDivider    = IC2_CLOCK_DIVIDER;
+  RCC_ClkInitStruct.IC6Selection.ClockSelection  = IC6_CLOCK_SOURCE;      /* NPU/sysc: PLL1 (2400) oder PLL3 (2000, fuer 1000 MHz) */
+  RCC_ClkInitStruct.IC6Selection.ClockDivider    = IC6_CLOCK_DIVIDER;
+  RCC_ClkInitStruct.IC11Selection.ClockSelection = IC11_CLOCK_SOURCE;     /* NPURAM/sysd: PLL1 (2400) oder PLL4 (1800, fuer 900 MHz) */
+  RCC_ClkInitStruct.IC11Selection.ClockDivider   = IC11_CLOCK_DIVIDER;
+#endif
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 #ifdef USE_FULL_ASSERT
 /**
