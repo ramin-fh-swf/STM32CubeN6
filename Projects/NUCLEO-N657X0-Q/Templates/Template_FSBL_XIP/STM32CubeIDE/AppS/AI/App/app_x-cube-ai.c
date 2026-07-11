@@ -53,6 +53,10 @@
 #include "rm_ai_yamnet.h"
 #endif
 
+#ifdef MODEL_YAMNET_RAM
+#include "rm_ai_yamnet_ram.h"
+#endif
+
 #ifdef MODEL_LENET5
 #include "rm_ai_lenet5.h"
 #endif
@@ -116,6 +120,13 @@ static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer) //TODO: m
 /*
  * Bootstrap
  */
+void init_ram(void)
+{
+#ifdef MODEL_YAMNET_RAM
+    rm_ai_yamnet_ram_setup_sram();
+#endif
+}
+
 int aiInit(void)
 {
     LL_ATON_RT_RuntimeInit();
@@ -133,7 +144,20 @@ int aiInit(void)
 
     printf("\n***************************************************\n");
     printf("Model name: %s\n", LL_ATON_DEFAULT_ORIGIN_MODEL_NAME);
-    printf("Model size: XX kB -> ToDo");
+
+#if defined(MODEL_WEIGHTS_SIZE_MB) && defined(MODEL_ACTIVATIONS_SIZE_MB) && defined(MODEL_MEMORY_USAGE_TOTAL_MB)
+    printf("Model weights size : %.2fMiB\n", MODEL_WEIGHTS_SIZE_MB);
+    printf("Model activations size: %.2fMiB\n", MODEL_ACTIVATIONS_SIZE_MB);
+    printf("Model total size: %.2fMiB\n", MODEL_MEMORY_USAGE_TOTAL_MB);
+#else
+    printf("Model weights size : %.2fKiB\n", MODEL_WEIGHTS_SIZE_KB);
+    printf("Model activations size: %.2fKiB\n", MODEL_ACTIVATIONS_SIZE_KB);
+    printf("Model total size: %.2fKiB\n", MODEL_MEMORY_USAGE_TOTAL_KB);
+#endif
+
+    printf("Model weights placement: %s\n", MODEL_WEIGHTS_PLACEMENT);
+    printf("Model activations placement: %s\n", MODEL_ACTIVATIONS_PLACEMENT);
+
     printf("\nParsing input buffer info:\n");
     printf("Input buffer address: 0x%p\n", (void*) buffer_in);
     parse_io_buffer(&inputBuffersInfos[0]);
@@ -157,6 +181,10 @@ int acquire_and_process_data()
 {
 #ifdef MODEL_YAMNET
     rm_ai_yamnet_preprocess(&NN_Instance_Default);
+#endif
+
+#ifdef MODEL_YAMNET_RAM
+    rm_ai_yamnet_ram_preprocess(&NN_Instance_Default);
 #endif
 
 #ifdef MODEL_LENET5
@@ -194,6 +222,10 @@ int post_process()
     rm_ai_yamnet_postprocess(&NN_Instance_Default);
 #endif
 
+#ifdef MODEL_YAMNET_RAM
+    rm_ai_yamnet_ram_postprocess(&NN_Instance_Default);
+#endif
+
 #ifdef MODEL_LENET5
     rm_ai_lenet5_postprocess(&NN_Instance_Default);
 #endif
@@ -217,6 +249,7 @@ void STM32CubeAI_Studio_AI_Init(void)
     aiPreInitialize();
 
     /* USER CODE BEGIN 5 */
+    init_ram();
     inter_hal_create(&obj);
     inter_hal_init();
 

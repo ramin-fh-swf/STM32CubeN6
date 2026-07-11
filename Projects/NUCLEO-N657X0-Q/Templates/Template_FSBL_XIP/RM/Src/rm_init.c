@@ -58,7 +58,18 @@ void rm_init_calculate_print_freqs(void)
     printf(" - System Clock Frequency:   %lu Hz\n", HAL_RCC_GetSysClockFreq());
     printf(" - NPU Clock Frequency:      %lu Hz\n", HAL_RCC_GetNPUClockFreq());
     printf(" - NPU RAMS Clock Frequency: %lu Hz\n", HAL_RCC_GetNPURAMSClockFreq());
-    printf(" - XSPI2 (Flash) SCK = %lu Hz\n", HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_XSPI2));
+    /* SCK = XSPI2 Clock / (DCR2.PRESCALER + 1). XSPI2 Clock: (IC3 <- PLL1),*/
+    {
+      uint32_t xspi2_ker_hz = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_XSPI2);
+      uint32_t prescaler    = (XSPI2->DCR2 & XSPI_DCR2_PRESCALER_Msk) >> XSPI_DCR2_PRESCALER_Pos;
+      uint32_t sck_hz       = xspi2_ker_hz / (prescaler + 1U);
+      printf(" - XSPI2 (Flash) SCK:        %lu Hz (%lu.%02lu MHz) [kernel=%lu Hz, DCR2.PRESCALER=%lu]\n",
+             (unsigned long)sck_hz,
+             (unsigned long)(sck_hz / 1000000U),
+             (unsigned long)((sck_hz % 1000000U) / 10000U),
+             (unsigned long)xspi2_ker_hz,
+             (unsigned long)prescaler);
+    }
     printf(" - VCORE Voltage Scaling:    %s\n",
            (HAL_PWREx_GetVoltageRange() == PWR_REGULATOR_VOLTAGE_SCALE0) ? "SCALE0 (overdrive)" : "SCALE1 (nominal)");
     printf(" - VOSCR raw = 0x%08lX | VOSreq=%s VOSRDY=%lu ACTVOS=%s ACTVOSRDY=%lu\n",
