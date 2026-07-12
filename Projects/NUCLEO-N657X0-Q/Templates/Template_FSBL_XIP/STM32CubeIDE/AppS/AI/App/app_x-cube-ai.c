@@ -120,7 +120,7 @@ static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer) //TODO: m
 /*
  * Bootstrap
  */
-void init_ram(void)
+static void init_ram(void)
 {
 #ifdef MODEL_YAMNET_RAM
     rm_ai_yamnet_ram_setup_sram();
@@ -236,10 +236,25 @@ int post_process()
     return 0;
 }
 
+static void run_energy_measurement_phases(void)
+{
+#if defined (INFERENCE_CONF_WFE_DURATION_MS) && INFERENCE_CONF_WFE_DURATION_MS != 0U
+    inter_hal_set_system_wfe(INFERENCE_CONF_WFE_DURATION_MS);
+#endif
+#if defined (INFERENCE_CONF_FULL_LOAD_DURATION_MS) && INFERENCE_CONF_FULL_LOAD_DURATION_MS != 0U
+    inter_hal_set_system_full_load(INFERENCE_CONF_FULL_LOAD_DURATION_MS);
+#endif
+}
+
 const inter_hal_func_t obj =
-{ .init = cyclesCounterInit, .start_counter = cyclesCounterStart,
-        .stop_counter = cyclesCounterEnd, .counter_val_to_float_ms =
-                dwtCyclesToFloatMs, };
+{
+    .init = cyclesCounterInit,
+    .start_counter = cyclesCounterStart,
+    .stop_counter = cyclesCounterEnd,
+    .counter_val_to_float_ms = dwtCyclesToFloatMs,
+    .get_time_ms = HAL_GetTick,
+    .sleep_wfe_ms = stm_inference_profiler_sleep_in_wfe,
+};
 
 /* Entry points --------------------------------------------------------------*/
 
@@ -269,6 +284,7 @@ static stm_profiler_statistic_t report_prof;
 
 void STM32CubeAI_Studio_AI_Process(void)
 {
+    run_energy_measurement_phases();
     stm_inference_profiler_set_inference_pins();
     int inference_count =
         STM_PROFILER_MAX_SAMPLES < INFERENCE_CONF_INFERENZ_COUNT
