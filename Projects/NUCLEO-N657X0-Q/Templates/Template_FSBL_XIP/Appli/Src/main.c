@@ -127,7 +127,7 @@ int main(void)
   {
     /* Toggle LED1 every 250ms */
     HAL_Delay(250);
-    BSP_LED_Toggle(LED_GREEN);
+    // BSP_LED_Toggle(LED_GREEN);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

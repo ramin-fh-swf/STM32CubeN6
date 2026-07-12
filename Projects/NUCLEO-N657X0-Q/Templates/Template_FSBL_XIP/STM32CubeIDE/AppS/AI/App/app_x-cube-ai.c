@@ -239,10 +239,14 @@ int post_process()
 static void run_energy_measurement_phases(void)
 {
 #if defined (INFERENCE_CONF_WFE_DURATION_MS) && INFERENCE_CONF_WFE_DURATION_MS != 0U
+    printf("Running WFE energy measurement phase...\r\n");
     inter_hal_set_system_wfe(INFERENCE_CONF_WFE_DURATION_MS);
+    printf("WFE energy measurement phase completed!\r\n");
 #endif
 #if defined (INFERENCE_CONF_FULL_LOAD_DURATION_MS) && INFERENCE_CONF_FULL_LOAD_DURATION_MS != 0U
+    printf("Running full load energy measurement phase...\r\n");
     inter_hal_set_system_full_load(INFERENCE_CONF_FULL_LOAD_DURATION_MS);
+    printf("Full load energy measurement phase completed!\r\n\n");
 #endif
 }
 
@@ -268,12 +272,8 @@ void STM32CubeAI_Studio_AI_Init(void)
     inter_hal_create(&obj);
     inter_hal_init();
 
-    stm_profiler_inference_pins_t inference_pins = {
-        .led_pin = { .port = LED3_GPIO_PORT, .pin = LED3_PIN }, /* Green LED */
-        .signal_pin = { .port = LED1_GPIO_PORT, .pin = LED1_PIN } /* ToDo: change it to a signal pin*/
-    };
-
-    stm_inference_profiler_init(inference_pins);
+    stm_inference_profiler_init_inference_pins();
+    stm_inference_profiler_init();
     aiInit();
 
     /* USER CODE END 5 */
@@ -285,11 +285,15 @@ static stm_profiler_statistic_t report_prof;
 void STM32CubeAI_Studio_AI_Process(void)
 {
     run_energy_measurement_phases();
-    stm_inference_profiler_set_inference_pins();
+
     int inference_count =
         STM_PROFILER_MAX_SAMPLES < INFERENCE_CONF_INFERENZ_COUNT
             ? STM_PROFILER_MAX_SAMPLES
             : INFERENCE_CONF_INFERENZ_COUNT;
+
+    printf("Running %d inferences for profiling...\r\n", inference_count);
+    stm_inference_profiler_set_pins_inference_start();
+
     for (int i = 0; i < inference_count; i++)
     {
         /* 1 - Acquire, pre-process and fill the input buffers */
@@ -306,7 +310,8 @@ void STM32CubeAI_Studio_AI_Process(void)
         inter_hal_feed_statistic_inference_duration(duration);
     }
 
-    stm_inference_profiler_clear_inference_pins();
+    stm_inference_profiler_set_pins_inference_end();
+    printf("Running %d inferences for profiling completed!\r\n", inference_count);
 
     /* 3 - Post-process the predictions */
     post_process();
