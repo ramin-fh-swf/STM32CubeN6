@@ -240,12 +240,16 @@ static void run_energy_measurement_phases(void)
 {
 #if defined (INFERENCE_CONF_WFE_DURATION_MS) && INFERENCE_CONF_WFE_DURATION_MS != 0U
     printf("Running WFE energy measurement phase...\r\n");
+    stm_inference_profiler_set_pins_inference_start();
     inter_hal_set_system_wfe(INFERENCE_CONF_WFE_DURATION_MS);
+    stm_inference_profiler_set_pins_inference_end();
     printf("WFE energy measurement phase completed!\r\n");
 #endif
 #if defined (INFERENCE_CONF_FULL_LOAD_DURATION_MS) && INFERENCE_CONF_FULL_LOAD_DURATION_MS != 0U
     printf("Running full load energy measurement phase...\r\n");
+    stm_inference_profiler_set_pins_inference_start();
     inter_hal_set_system_full_load(INFERENCE_CONF_FULL_LOAD_DURATION_MS);
+    stm_inference_profiler_set_pins_inference_end();
     printf("Full load energy measurement phase completed!\r\n\n");
 #endif
 }
