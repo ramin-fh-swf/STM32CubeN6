@@ -18,6 +18,16 @@
 
 #include "rm_ai.h"
 #include "mnist_input_label.h"
+#include "network_atonbuf.AXISRAM3.h"
+
+void rm_ai_lenet5_ram_setup_sram()
+{
+    /* Copy the model weights from flash into RAM */
+    memcpy((void *)G_AXISRAM3_ADDR, g_axisram3, g_axisram3_len);
+    #if (__DCACHE_PRESENT == 1U)
+    SCB_CleanDCache_by_Addr((void *)G_AXISRAM3_ADDR, g_axisram3_len);
+    #endif
+}
 
 static int get_prediction(int8_t *output, int len)
 {
@@ -36,18 +46,18 @@ static int get_prediction(int8_t *output, int len)
     return max_idx;
 }
 
-void rm_ai_lenet5_preprocess(const NN_Instance_TypeDef *nn_instance)
+void rm_ai_lenet5_ram_preprocess(const NN_Instance_TypeDef *nn_instance)
 {
     const LL_Buffer_InfoTypeDef *inputBuffersInfos = LL_ATON_Input_Buffers_Info(nn_instance);
     uint8_t *buffer_in = (uint8_t *)LL_Buffer_addr_start(inputBuffersInfos);
     uint32_t buffer_len = LL_Buffer_len(inputBuffersInfos); // should be 28*28 = 784 for lenet5
 
     memset(buffer_in, 0, buffer_len);
-    memcpy(buffer_in, mnist_input_label_7, 784);
+    memcpy(buffer_in, mnist_input_label_8, 784);
     SCB_CleanDCache_by_Addr((uint32_t *)buffer_in, buffer_len);
 }
 
-void rm_ai_lenet5_postprocess(const NN_Instance_TypeDef *nn_instance)
+void rm_ai_lenet5_ram_postprocess(const NN_Instance_TypeDef *nn_instance)
 {
     const LL_Buffer_InfoTypeDef *outputBuffersInfos = LL_ATON_Output_Buffers_Info(nn_instance);
     uint8_t *buffer_out = (uint8_t *)LL_Buffer_addr_start(outputBuffersInfos);

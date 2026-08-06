@@ -61,6 +61,10 @@
 #include "rm_ai_lenet5.h"
 #endif
 
+#ifdef MODEL_LENET5_RAM
+#include "rm_ai_lenet5_ram.h"
+#endif
+
 #ifdef MODEL_EFFICIENTNETV2B2
 #include "rm_ai_efficientnetv2b3_300.h"
 #endif
@@ -129,6 +133,10 @@ static void init_ram(void)
 #ifdef MODEL_YAMNET_RAM
     rm_ai_yamnet_ram_setup_sram();
 #endif
+
+#ifdef MODEL_LENET5_RAM
+    rm_ai_lenet5_ram_setup_sram();
+#endif
 }
 
 int aiInit(void)
@@ -195,6 +203,10 @@ int acquire_and_process_data()
     rm_ai_lenet5_preprocess(&NN_Instance_Default);
 #endif
 
+#ifdef MODEL_LENET5_RAM
+    rm_ai_lenet5_ram_preprocess(&NN_Instance_Default);
+#endif
+
 #ifdef MODEL_EFFICIENTNETV2B2
     rm_ai_efficientnetv2b3_300_preprocess(&NN_Instance_Default);
 #endif
@@ -236,6 +248,10 @@ int post_process()
 
 #ifdef MODEL_LENET5
     rm_ai_lenet5_postprocess(&NN_Instance_Default);
+#endif
+
+#ifdef MODEL_LENET5_RAM
+    rm_ai_lenet5_ram_postprocess(&NN_Instance_Default);
 #endif
 
 #ifdef MODEL_EFFICIENTNETV2B2

@@ -1,0 +1,92 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-08-06 22:51:58
+Parameters            : generate --model /home/rama/dev_own/ai-thesis/eval/1_models/LeNet5/arch/lenet5_mnist_int8.tflite --batch-size 10 --mode target --st-neural-art user_profile@/home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/profile-neural-art.json --name network --verbosity 1 --c-api legacy --target stm32n6 --workspace /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/st_ai_ws --output /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/st_ai_output
+
+Model name - lenet5_mnist_int8
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+m_id   layer (original)                   oshape                param/size           macc                    connected to 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+0      serving_default_keras_tensor0 ()   [b:1,h:28,w:28,c:1]                                                             
+       conv2d_0 (CONV_2D)                 [b:1,h:24,w:24,c:6]   156/174            86,406   serving_default_keras_tensor0 
+       nl_0_nl (CONV_2D)                  [b:1,h:24,w:24,c:6]                       3,456                        conv2d_0 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+1      pool_1 (AVERAGE_POOL_2D)           [b:1,h:12,w:12,c:6]                       3,456                         nl_0_nl 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+2      conv2d_2 (CONV_2D)                 [b:1,h:8,w:8,c:16]    2,416/2,464       153,616                          pool_1 
+       nl_2_nl (CONV_2D)                  [b:1,h:8,w:8,c:16]                        1,024                        conv2d_2 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+3      pool_3 (AVERAGE_POOL_2D)           [b:1,h:4,w:4,c:16]                        1,024                         nl_2_nl 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+7      reshape_7 (RESHAPE)                [b:1,c:256]                                                              pool_3 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+8      tfl_pseudo_qconst5 ()              [b:120,c:256]         30,720/30,720                                             
+       tfl_pseudo_qconst4 ()              [b:120]               120/480                                                   
+       gemm_8 (FULLY_CONNECTED)           [b:1,c:120]                              30,840                       reshape_7 
+                                                                                                       tfl_pseudo_qconst5 
+                                                                                                       tfl_pseudo_qconst4 
+       nl_8_nl (FULLY_CONNECTED)          [b:1,c:120]                                 120                          gemm_8 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+9      tfl_pseudo_qconst3 ()              [b:84,c:120]          10,080/10,080                                             
+       tfl_pseudo_qconst2 ()              [b:84]                84/336                                                    
+       gemm_9 (FULLY_CONNECTED)           [b:1,c:84]                               10,164                         nl_8_nl 
+                                                                                                       tfl_pseudo_qconst3 
+                                                                                                       tfl_pseudo_qconst2 
+       nl_9_nl (FULLY_CONNECTED)          [b:1,c:84]                                   84                          gemm_9 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+10     tfl_pseudo_qconst1 ()              [b:10,c:84]           840/840                                                   
+       tfl_pseudo_qconst ()               [b:10]                10/40                                                     
+       gemm_10 (FULLY_CONNECTED)          [b:1,c:10]                                  850                         nl_9_nl 
+                                                                                                       tfl_pseudo_qconst1 
+                                                                                                        tfl_pseudo_qconst 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+11     nl_11 (SOFTMAX)                    [b:1,c:10]                                  150                         gemm_10 
+------ ---------------------------------- --------------------- --------------- --------- ------------------------------- 
+model: macc=291,190 weights=45,134 activations=-- io=--
+
+
+
+
+
+Compilation details
+------------------------------------------------------------------------------------
+Compiler version: 1.1.1-14
+Compiler arguments:  -i /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/st_ai_output/lenet5_mnist_int8_OE_3_3_0.onnx --json-quant-file /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/st_ai_output/lenet5_mnist_int8_OE_3_3_0_Q.json -g network.c --load-mdesc /opt/ST/STEdgeAI/2.2/Utilities/configs/stm32n6.mdesc --load-mpool /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/memory_pool.mpool --save-mpool-file /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/st_ai_ws/neural_art__network/memory_pool.mpool --out-dir-prefix /home/rama/STM32CubeAi/lenet5_mnist_tflite_quant/.ai/run/run-2/.ai/st_ai_ws/neural_art__network/ --native-float --mvei --cache-maintenance --Ocache-opt --enable-virtual-mem-pools --Os --Oauto-sched --enable-epoch-controller --output-info-file c_info.json
+====================================================================================
+
+Memory usage information  (input/output buffers are included in activations)
+------------------------------------------------------------------------------------
+	flexMEM    [0x34000000 - 0x34000000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	cpuRAM1    [0x34064000 - 0x34064000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	cpuRAM2    [0x34100000 - 0x34100000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	npuRAM3    [0x34200000 - 0x34270000]:      1.609 kB /    448.000 kB  (  0.36 % used) -- weights:          0  B (  0.00 % used)  activations:      1.609 kB (  0.36 % used)
+	npuRAM4    [0x34270000 - 0x342E0000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	npuRAM5    [0x342E0000 - 0x34350000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	npuRAM6    [0x34350000 - 0x343C0000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	octoFlash  [0x71000000 - 0x78000000]:     43.220 kB /    112.000 MB  (  0.04 % used) -- weights:     43.220 kB (  0.04 % used)  activations:          0  B (  0.00 % used)
+	hyperRAM   [0x90000000 - 0x90000000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+---
+Total:                                            44.829 kB                                  -- weights:     43.220 kB                  activations:      1.609 kB                   
+====================================================================================
+
+
+Used memory ranges
+------------------------------------------------------------------------------------
+	npuRAM3    [0x34200000 - 0x34270000]: 0x34200000-0x34200670
+	octoFlash  [0x71000000 - 0x78000000]: 0x71000000-0x7100ACF0
+====================================================================================
+
+Epochs details
+------------------------------------------------------------------------------------
+Total number of epochs: 9 of which 1 implemented in software
+---
+epoch ID   HW/SW/EC Operation (SW only)
+epoch 1       EC    
+epoch 2       EC    
+epoch 3       EC    
+epoch 4       EC    
+epoch 5       EC    
+epoch 6       EC    
+epoch 7       EC    
+epoch 8       EC    
+epoch 9      -SW-   (      Softmax       )
+====================================================================================
