@@ -65,6 +65,10 @@
 #include "rm_ai_efficientnetv2b3_300.h"
 #endif
 
+#ifdef MODEL_YOLOV8N_POSE
+#include "rm_ai_yolov8n_pose.h"
+#endif
+
 /* USER CODE END includes */
 
 /* IO buffers ----------------------------------------------------------------*/
@@ -194,6 +198,10 @@ int acquire_and_process_data()
 #ifdef MODEL_EFFICIENTNETV2B2
     rm_ai_efficientnetv2b3_300_preprocess(&NN_Instance_Default);
 #endif
+
+#ifdef MODEL_YOLOV8N_POSE
+    rm_ai_yolov8n_pose_preprocess(&NN_Instance_Default);
+#endif
     return 0;
 }
 
@@ -233,6 +241,11 @@ int post_process()
 #ifdef MODEL_EFFICIENTNETV2B2
     rm_ai_efficientnetv2b3_300_postprocess(&NN_Instance_Default);
 #endif
+
+#ifdef MODEL_YOLOV8N_POSE
+    rm_ai_yolov8n_pose_postprocess(&NN_Instance_Default);
+#endif
+
     return 0;
 }
 
