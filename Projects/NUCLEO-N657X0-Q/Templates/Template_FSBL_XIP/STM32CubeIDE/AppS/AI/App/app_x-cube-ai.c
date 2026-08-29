@@ -329,15 +329,19 @@ void STM32CubeAI_Studio_AI_Process(void)
 
     for (int i = 0; i < inference_count; i++)
     {
-        /* 1 - Acquire, pre-process and fill the input buffers */
-        acquire_and_process_data();
-
-        /* 2 - Call inference engine */
+        /* 1- Start latency time measurement */
         inter_hal_start_counter();
         stm_inference_profiler_begin();
 
+        /* 2- Acquire, pre-process and fill the input buffers -
+         *  On STM we should copy the tensors out of the engine. PSoC does it automatically.
+         *  In both case the latency time measurement should cover the copy of tensors as well */
+        acquire_and_process_data();
+
+        /* 3 - Call inference engine */
         aiRun();
 
+        /* 4- Stop latency time measurement */
         stm_inference_profiler_end();
         float duration = inter_hal_get_counter(); //dur = dwtCyclesToFloatMs(cyclesCounterEnd());
         inter_hal_feed_statistic_inference_duration(duration);
