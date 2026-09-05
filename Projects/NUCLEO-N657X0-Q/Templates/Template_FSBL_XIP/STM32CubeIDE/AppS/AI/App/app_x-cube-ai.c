@@ -266,7 +266,7 @@ int post_process()
     return 0;
 }
 
-static void run_energy_measurement_phases(void)
+__attribute__((unused)) static void run_energy_measurement_phases(void)
 {
 #if defined (INFERENCE_CONF_WFE_DURATION_MS) && INFERENCE_CONF_WFE_DURATION_MS != 0U
     printf("Running WFE energy measurement phase...\r\n");
@@ -323,7 +323,9 @@ void STM32CubeAI_Studio_AI_Process(void)
      * Latenz noch Energie. Abschaltbar ueber INFERENCE_CONF_CONDITIONS_DUMP. */
     inference_conditions_dump_before_series();
 
+#if INFERENCE_CONF_ENERGY_PHASES_MEASUREMENT
     run_energy_measurement_phases();
+#endif
 
     int inference_count =
         STM_PROFILER_MAX_SAMPLES < INFERENCE_CONF_INFERENZ_COUNT
