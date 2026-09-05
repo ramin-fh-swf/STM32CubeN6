@@ -48,6 +48,7 @@
 #include "inference_conf.h"
 #include "inter_hal.h"
 #include "stm_inference_profiler.h"
+#include "inference_conditions.h"
 
 #ifdef MODEL_YAMNET
 #include "rm_ai_yamnet.h"
@@ -317,12 +318,22 @@ static stm_profiler_statistic_t report_prof;
 
 void STM32CubeAI_Studio_AI_Process(void)
 {
+    /* Randbedingungen protokollieren, bevor die erste Messung laeuft. Der
+     * Aufruf liegt ausserhalb jedes GPIO-Fensters und beruehrt daher weder
+     * Latenz noch Energie. Abschaltbar ueber INFERENCE_CONF_CONDITIONS_DUMP. */
+    inference_conditions_dump_before_series();
+
     run_energy_measurement_phases();
 
     int inference_count =
         STM_PROFILER_MAX_SAMPLES < INFERENCE_CONF_INFERENZ_COUNT
             ? STM_PROFILER_MAX_SAMPLES
             : INFERENCE_CONF_INFERENZ_COUNT;
+
+#if (INFERENCE_CONF_PROFILE_EMPTY_LOOP == 1U)
+    printf("\r\n*** LEERLAUF (P4-A): die Laufzeitschicht wird NICHT aufgerufen.\r\n");
+    printf("*** Die folgenden Zeiten sind Instrumentierungs-Overhead, keine Inferenz.\r\n\r\n");
+#endif
 
     printf("Running %d inferences for profiling...\r\n", inference_count);
     stm_inference_profiler_set_pins_inference_start();
@@ -335,16 +346,27 @@ void STM32CubeAI_Studio_AI_Process(void)
 
         /* 2- Acquire, pre-process and fill the input buffers -
          *  On STM we should copy the tensors out of the engine. PSoC does it automatically.
-         *  In both case the latency time measurement should cover the copy of tensors as well */
+         *  In both case the latency time measurement should cover the copy of tensors as well.
+         *  Die eigene Klammer trennt die Kopie vom Overhead der Laufzeitschleife;
+         *  beide liegen ausserhalb jedes Epochenblocks. */
+        stm_inference_profiler_input_begin();
         acquire_and_process_data();
+        stm_inference_profiler_input_end();
 
         /* 3 - Call inference engine */
+#if (INFERENCE_CONF_PROFILE_EMPTY_LOOP == 0U)
         aiRun();
+#endif
 
         /* 4- Stop latency time measurement */
         stm_inference_profiler_end();
         float duration = inter_hal_get_counter(); //dur = dwtCyclesToFloatMs(cyclesCounterEnd());
         inter_hal_feed_statistic_inference_duration(duration);
+
+        /* Nur im Diagnose-Bauzustand. Die Ausgabe liegt innerhalb des
+         * GPIO-Fensters und verfaelscht die Messung, siehe
+         * INFERENCE_CONF_CONDITIONS_DUMP_IN_LOOP. */
+        inference_conditions_dump_between_inferences((uint32_t) i);
     }
 
     stm_inference_profiler_set_pins_inference_end();
@@ -388,6 +410,42 @@ void STM32CubeAI_Studio_AI_Process(void)
             report_prof.sw.average_ms, report_prof.sw.median_ms,
             report_prof.sw.stddev_ms,
             (unsigned int) report_prof.sw.block_count);
+
+    /* Anteile ausserhalb jedes Epochenblocks. Zusammen mit den Kanaelen oben
+     * ergibt sich die Gesamtzeit vollstaendig. */
+    printf(
+            "Eingang: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
+            report_prof.input.min_ms, report_prof.input.max_ms,
+            report_prof.input.average_ms, report_prof.input.median_ms,
+            report_prof.input.stddev_ms);
+    printf(
+            "Rest   : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
+            report_prof.rest.min_ms, report_prof.rest.max_ms,
+            report_prof.rest.average_ms, report_prof.rest.median_ms,
+            report_prof.rest.stddev_ms);
+
+    /* Beschleunigungssegment der Bloecke (POST_START..PRE_END). Nur dieses ist
+     * mit dem PMU-Zaehlfenster des Ethos-U55 auf dem PSoC vergleichbar; die
+     * Zeilen darueber enthalten zusaetzlich die CPU-Arbeit der Runtime. */
+    printf("\r\nDavon Beschleunigungssegment (POST_START..PRE_END):\r\n");
+    printf(
+            "EC/NPU: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU-Anteil %.3f ms)\r\n",
+            report_prof.ec_wait.min_ms, report_prof.ec_wait.max_ms,
+            report_prof.ec_wait.average_ms, report_prof.ec_wait.median_ms,
+            report_prof.ec_wait.stddev_ms,
+            report_prof.ec.average_ms - report_prof.ec_wait.average_ms);
+    printf(
+            "Hybrid: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU-Anteil %.3f ms)\r\n",
+            report_prof.hybrid_wait.min_ms, report_prof.hybrid_wait.max_ms,
+            report_prof.hybrid_wait.average_ms, report_prof.hybrid_wait.median_ms,
+            report_prof.hybrid_wait.stddev_ms,
+            report_prof.hybrid.average_ms - report_prof.hybrid_wait.average_ms);
+    printf(
+            "SW    : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU-Anteil %.3f ms)\r\n",
+            report_prof.sw_wait.min_ms, report_prof.sw_wait.max_ms,
+            report_prof.sw_wait.average_ms, report_prof.sw_wait.median_ms,
+            report_prof.sw_wait.stddev_ms,
+            report_prof.sw.average_ms - report_prof.sw_wait.average_ms);
 }
 
 void STM32CubeAI_Studio_AI_Deinit(void)
