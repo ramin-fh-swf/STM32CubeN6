@@ -64,7 +64,7 @@ void rm_ai_yolov8n_pose_postprocess(const NN_Instance_TypeDef *nn_instance)
 
     if (count == 0)
     {
-        printf("\r\n=== YOLOv8n-Pose: keine Person ueber Schwelle %.2f"
+        printf("\r\n=== YOLOv8n-Pose: Keine Person ueber Schwellenwert %.2f gefunden"
                " (hoechster Score %.3f) ===\r\n",
                 (double) YOLOV8NPOSE_SCORE_THRESHOLD, (double) best_score);
         return;

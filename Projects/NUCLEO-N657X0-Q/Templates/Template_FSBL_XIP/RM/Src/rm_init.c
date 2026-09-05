@@ -53,55 +53,59 @@ void MX_LPUART1_UART_Init(void)
 
 void rm_init_calculate_print_freqs(void)
 {
-    printf("Clock Frequencies ###\n");
-    printf(" - CPU Clock Frequency:      %lu Hz\n", HAL_RCC_GetCpuClockFreq());
-    printf(" - System Clock Frequency:   %lu Hz\n", HAL_RCC_GetSysClockFreq());
-    printf(" - NPU Clock Frequency:      %lu Hz\n", HAL_RCC_GetNPUClockFreq());
-    printf(" - NPU RAMS Clock Frequency: %lu Hz\n", HAL_RCC_GetNPURAMSClockFreq());
-    /* SCK = XSPI2 Clock / (DCR2.PRESCALER + 1). XSPI2 Clock: (IC3 <- PLL1),*/
+    /* SCK = XSPI2-Kerntakt (IC3 <- PLL1) / (DCR2.PRESCALER + 1). */
+    uint32_t xspi2_ker_hz = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_XSPI2);
+    uint32_t prescaler    = (XSPI2->DCR2 & XSPI_DCR2_PRESCALER_Msk) >> XSPI_DCR2_PRESCALER_Pos;
+    uint32_t sck_hz       = xspi2_ker_hz / (prescaler + 1U);
+
+    /* Gemeinsamer Taktblock, Form und Reihenfolge mit der PSoC-Seite abgestimmt. */
+    printf("\r\n--- Clock domains ---\r\n");
+    printf("  %-28s = %lu Hz\r\n", "CPU",
+           (unsigned long) HAL_RCC_GetCpuClockFreq());
+    printf("  %-28s = %lu Hz\r\n", "CPU-RAM",
+           (unsigned long) HAL_RCC_GetSysClockFreq());
+    printf("  %-28s = %lu Hz\r\n", "NPU",
+           (unsigned long) HAL_RCC_GetNPUClockFreq());
+    printf("  %-28s = %lu Hz\r\n", "NPU-RAM",
+           (unsigned long) HAL_RCC_GetNPURAMSClockFreq());
+    printf("  %-28s = %lu Hz\r\n", "Flash interface (SCK)",
+           (unsigned long) sck_hz);
+
+    /* Ab hier plattformeigen, ohne Entsprechung auf dem PSoC. */
+    printf("\r\n--- STM32N657 only ---\r\n");
+    printf("  XSPI2 SCK  = %lu.%02lu MHz [kernel=%lu Hz, DCR2.PRESCALER=%lu]\r\n",
+           (unsigned long)(sck_hz / 1000000U),
+           (unsigned long)((sck_hz % 1000000U) / 10000U),
+           (unsigned long)xspi2_ker_hz,
+           (unsigned long)prescaler);
+
+    /* Peak = SCK * Leitungen * (DTR ? 2 : 1) / 8 -- obere Schranke, DCYC geht ab. */
     {
-      uint32_t xspi2_ker_hz = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_XSPI2);
-      uint32_t prescaler    = (XSPI2->DCR2 & XSPI_DCR2_PRESCALER_Msk) >> XSPI_DCR2_PRESCALER_Pos;
-      uint32_t sck_hz       = xspi2_ker_hz / (prescaler + 1U);
-      printf(" - XSPI2 (Flash) SCK:        %lu Hz (%lu.%02lu MHz) [kernel=%lu Hz, DCR2.PRESCALER=%lu]\n",
-             (unsigned long)sck_hz,
-             (unsigned long)(sck_hz / 1000000U),
-             (unsigned long)((sck_hz % 1000000U) / 10000U),
-             (unsigned long)xspi2_ker_hz,
-             (unsigned long)prescaler);
+      uint32_t ccr   = XSPI2->CCR;
+      uint32_t dmode = (ccr & XSPI_CCR_DMODE_Msk) >> XSPI_CCR_DMODE_Pos;
+      uint32_t ddtr  = (ccr & XSPI_CCR_DDTR_Msk) ? 1U : 0U;
+      uint32_t dcyc  = (XSPI2->TCR & XSPI_TCR_DCYC_Msk) >> XSPI_TCR_DCYC_Pos;
+      uint32_t fmode = (XSPI2->CR & XSPI_CR_FMODE_Msk) >> XSPI_CR_FMODE_Pos;
+      uint32_t lines = (dmode == 1U) ? 1U : (dmode == 2U) ? 2U :
+                       (dmode == 3U) ? 4U : (dmode == 4U) ? 8U : 0U;
+      uint32_t peak_kBps = (sck_hz / 1000U) * lines * (ddtr ? 2U : 1U) / 8U;
 
-      /* Lesekommando der Speicher-Mapped-Konfiguration. Bestimmt zusammen mit SCK
-       * die Spitzenbandbreite, mit der die NPU Gewichte aus dem XIP-Flash streamt:
-       *   Peak = SCK * Datenleitungen * (DTR ? 2 : 1) / 8 Byte/s
-       * DMODE-Kodierung laut CCR: 1 = 1, 2 = 2, 3 = 4, 4 = 8 Leitungen.
-       * DCYC (Dummy-Zyklen) und die Adressphase gehen davon wieder ab, die
-       * Spitzenbandbreite ist also eine obere Schranke, kein erreichbarer Wert. */
-      {
-        uint32_t ccr   = XSPI2->CCR;
-        uint32_t dmode = (ccr & XSPI_CCR_DMODE_Msk) >> XSPI_CCR_DMODE_Pos;
-        uint32_t ddtr  = (ccr & XSPI_CCR_DDTR_Msk) ? 1U : 0U;
-        uint32_t dcyc  = (XSPI2->TCR & XSPI_TCR_DCYC_Msk) >> XSPI_TCR_DCYC_Pos;
-        uint32_t fmode = (XSPI2->CR & XSPI_CR_FMODE_Msk) >> XSPI_CR_FMODE_Pos;
-        uint32_t lines = (dmode == 1U) ? 1U : (dmode == 2U) ? 2U :
-                         (dmode == 3U) ? 4U : (dmode == 4U) ? 8U : 0U;
-        uint32_t peak_kBps = (sck_hz / 1000U) * lines * (ddtr ? 2U : 1U) / 8U;
-
-        printf(" - XSPI2 (Flash) Read:       %lu lines %s, DCYC=%lu, peak=%lu.%03lu MB/s"
-               " [CCR=0x%08lX, TCR=0x%08lX, CR.FMODE=%lu%s]\n",
-               (unsigned long)lines,
-               ddtr ? "DTR" : "SDR",
-               (unsigned long)dcyc,
-               (unsigned long)(peak_kBps / 1000U),
-               (unsigned long)(peak_kBps % 1000U),
-               (unsigned long)ccr,
-               (unsigned long)XSPI2->TCR,
-               (unsigned long)fmode,
-               (fmode == 3U) ? " = memory-mapped" : " != memory-mapped");
-      }
+      printf("  XSPI2 Read = %lu lines %s, DCYC=%lu, peak=%lu.%03lu MB/s"
+             " [CCR=0x%08lX, TCR=0x%08lX, CR.FMODE=%lu%s]\r\n",
+             (unsigned long)lines,
+             ddtr ? "DTR" : "SDR",
+             (unsigned long)dcyc,
+             (unsigned long)(peak_kBps / 1000U),
+             (unsigned long)(peak_kBps % 1000U),
+             (unsigned long)ccr,
+             (unsigned long)XSPI2->TCR,
+             (unsigned long)fmode,
+             (fmode == 3U) ? " = memory-mapped" : " != memory-mapped");
     }
-    printf(" - VCORE Voltage Scaling:    %s\n",
+
+    printf("  VCORE      = %s\r\n",
            (HAL_PWREx_GetVoltageRange() == PWR_REGULATOR_VOLTAGE_SCALE0) ? "SCALE0 (overdrive)" : "SCALE1 (nominal)");
-    printf(" - VOSCR raw = 0x%08lX | VOSreq=%s VOSRDY=%lu ACTVOS=%s ACTVOSRDY=%lu\n",
+    printf("  VOSCR raw  = 0x%08lX | VOSreq=%s VOSRDY=%lu ACTVOS=%s ACTVOSRDY=%lu\r\n",
            PWR->VOSCR,
            (PWR->VOSCR & PWR_VOSCR_VOS)       ? "SCALE0" : "SCALE1",
            (PWR->VOSCR & PWR_VOSCR_VOSRDY)    ? 1UL : 0UL,

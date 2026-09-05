@@ -94,7 +94,7 @@ int main(void)
   /* USER CODE BEGIN Init */
   SystemClock_Config_AppCpu();
   rm_init_uart();
-  printf("######## AppS ########\n");
+  printf("######## AppS ########\r\n");
 
   rm_init_calculate_print_freqs();
   MX_GPIO_Init();
@@ -119,7 +119,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   STM32CubeAI_Studio_AI_Init();
-  printf("App init done ...\n");
+  printf("App init done ...\r\n");
 
   STM32CubeAI_Studio_AI_Process();
 
@@ -159,7 +159,7 @@ static void MX_CACHEAXI_Init(void)
   }
   /* USER CODE BEGIN CACHEAXI_Init 2 */
   //npu_cache_enable();
-  printf(" - CACHEAXI successfully initialized\n");
+  printf(" - CACHEAXI successfully initialized\r\n");
 
   /* USER CODE END CACHEAXI_Init 2 */
 

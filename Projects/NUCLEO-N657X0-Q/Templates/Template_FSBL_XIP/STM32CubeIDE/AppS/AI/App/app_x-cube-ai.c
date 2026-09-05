@@ -93,37 +93,37 @@ static void parse_io_buffer(const LL_Buffer_InfoTypeDef *const buffer) //TODO: m
     {
         return;
     }
-    printf("    Buffer name: %s\n", buffer->name);
-    printf("    Buffer base address: 0x%" PRIxPTR "\n", buffer->addr_base.i);
-    printf("    Buffer length: %lu\n", LL_Buffer_len(buffer));
-    printf("    Buffer offset start: %lu\n", buffer->offset_start);
-    printf("    Buffer offset end: %lu\n", buffer->offset_end);
-    printf("    Buffer offset limit: %lu\n", buffer->offset_limit);
-    printf("    Buffer is user allocated: %d\n", buffer->is_user_allocated);
-    printf("    Buffer is param: %d\n", buffer->is_param);
-    printf("    Buffer epoch: %d\n", buffer->epoch);
-    printf("    Buffer batch: %lu\n", buffer->batch);
+    printf("    Buffer name: %s\r\n", buffer->name);
+    printf("    Buffer base address: 0x%" PRIxPTR "\r\n", buffer->addr_base.i);
+    printf("    Buffer length: %lu\r\n", LL_Buffer_len(buffer));
+    printf("    Buffer offset start: %lu\r\n", buffer->offset_start);
+    printf("    Buffer offset end: %lu\r\n", buffer->offset_end);
+    printf("    Buffer offset limit: %lu\r\n", buffer->offset_limit);
+    printf("    Buffer is user allocated: %d\r\n", buffer->is_user_allocated);
+    printf("    Buffer is param: %d\r\n", buffer->is_param);
+    printf("    Buffer epoch: %d\r\n", buffer->epoch);
+    printf("    Buffer batch: %lu\r\n", buffer->batch);
     printf("    Buffer mem shape: ");
     for (int i = 0; i < buffer->mem_ndims; i++)
     {
         printf(" %lu", buffer->mem_shape[i]);
     }
-    printf("\n");
-    printf("    Buffer mem ndims: %d\n", buffer->mem_ndims);
-    printf("    Buffer chpos: %d\n", buffer->chpos);
-    printf("    Buffer type: %d\n", buffer->type);
-    printf("    Buffer Qm: %d\n", buffer->Qm);
-    printf("    Buffer Qn: %d\n", buffer->Qn);
-    printf("    Buffer Qunsigned: %d\n", buffer->Qunsigned);
-    printf("    Buffer ndims: %d\n", buffer->ndims);
-    printf("    Buffer nbits: %d\n", buffer->nbits);
-    printf("    Buffer per_channel: %d\n", buffer->per_channel);
+    printf("\r\n");
+    printf("    Buffer mem ndims: %d\r\n", buffer->mem_ndims);
+    printf("    Buffer chpos: %d\r\n", buffer->chpos);
+    printf("    Buffer type: %d\r\n", buffer->type);
+    printf("    Buffer Qm: %d\r\n", buffer->Qm);
+    printf("    Buffer Qn: %d\r\n", buffer->Qn);
+    printf("    Buffer Qunsigned: %d\r\n", buffer->Qunsigned);
+    printf("    Buffer ndims: %d\r\n", buffer->ndims);
+    printf("    Buffer nbits: %d\r\n", buffer->nbits);
+    printf("    Buffer per_channel: %d\r\n", buffer->per_channel);
     printf("    Buffer shape: ");
     for (int i = 0; i < buffer->ndims; i++)
     {
         printf(" %lu", buffer->shape[i]);
     }
-    printf("\n\n");
+    printf("\r\n\r\n");
 }
 
 /*
@@ -155,28 +155,28 @@ int aiInit(void)
     uint8_t *buffer_in = (uint8_t*) LL_Buffer_addr_start(&inputBuffersInfos[0]);
     uint8_t *buffer_out = (uint8_t*) LL_Buffer_addr_start(&outputBuffersInfos[0]);
 
-    printf("\n***************************************************\n");
-    printf("Model name: %s\n", LL_ATON_DEFAULT_ORIGIN_MODEL_NAME);
+    printf("\r\n***************************************************\r\n");
+    printf("Model name: %s\r\n", LL_ATON_DEFAULT_ORIGIN_MODEL_NAME);
 
 #if defined(MODEL_WEIGHTS_SIZE_MB) && defined(MODEL_ACTIVATIONS_SIZE_MB) && defined(MODEL_MEMORY_USAGE_TOTAL_MB)
-    printf("Model weights size : %.2fMiB\n", MODEL_WEIGHTS_SIZE_MB);
-    printf("Model activations size: %.2fMiB\n", MODEL_ACTIVATIONS_SIZE_MB);
-    printf("Model total size: %.2fMiB\n", MODEL_MEMORY_USAGE_TOTAL_MB);
+    printf("Model weights size : %.2fMiB\r\n", MODEL_WEIGHTS_SIZE_MB);
+    printf("Model activations size: %.2fMiB\r\n", MODEL_ACTIVATIONS_SIZE_MB);
+    printf("Model total size: %.2fMiB\r\n", MODEL_MEMORY_USAGE_TOTAL_MB);
 #else
-    printf("Model weights size : %.2fKiB\n", MODEL_WEIGHTS_SIZE_KB);
-    printf("Model activations size: %.2fKiB\n", MODEL_ACTIVATIONS_SIZE_KB);
-    printf("Model total size: %.2fKiB\n", MODEL_MEMORY_USAGE_TOTAL_KB);
+    printf("Model weights size : %.2fKiB\r\n", MODEL_WEIGHTS_SIZE_KB);
+    printf("Model activations size: %.2fKiB\r\n", MODEL_ACTIVATIONS_SIZE_KB);
+    printf("Model total size: %.2fKiB\r\n", MODEL_MEMORY_USAGE_TOTAL_KB);
 #endif
 
-    printf("Model weights placement: %s\n", MODEL_WEIGHTS_PLACEMENT);
-    printf("Model activations placement: %s\n", MODEL_ACTIVATIONS_PLACEMENT);
+    printf("Model weights placement: %s\r\n", MODEL_WEIGHTS_PLACEMENT);
+    printf("Model activations placement: %s\r\n", MODEL_ACTIVATIONS_PLACEMENT);
 
-    printf("\nParsing input buffer info:\n");
-    printf("Input buffer address: 0x%p\n", (void*) buffer_in);
+    printf("\r\nParsing input buffer info:\r\n");
+    printf("Input buffer address: 0x%p\r\n", (void*) buffer_in);
     parse_io_buffer(&inputBuffersInfos[0]);
 
-    printf("Parsing output buffer info:\n");
-    printf("Output buffer address: 0x%p\n", (void*) buffer_out);
+    printf("Parsing output buffer info:\r\n");
+    printf("Output buffer address: 0x%p\r\n", (void*) buffer_out);
     parse_io_buffer(&outputBuffersInfos[0]);
 
     return 0;
@@ -280,7 +280,7 @@ __attribute__((unused)) static void run_energy_measurement_phases(void)
     stm_inference_profiler_set_pins_inference_start();
     inter_hal_set_system_full_load(INFERENCE_CONF_FULL_LOAD_DURATION_MS);
     stm_inference_profiler_set_pins_inference_end();
-    printf("Full load energy measurement phase completed!\r\n\n");
+    printf("Full load energy measurement phase completed!\r\n\r\n");
 #endif
 }
 
@@ -333,8 +333,8 @@ void STM32CubeAI_Studio_AI_Process(void)
             : INFERENCE_CONF_INFERENZ_COUNT;
 
 #if (INFERENCE_CONF_PROFILE_EMPTY_LOOP == 1U)
-    printf("\r\n*** LEERLAUF (P4-A): die Laufzeitschicht wird NICHT aufgerufen.\r\n");
-    printf("*** Die folgenden Zeiten sind Instrumentierungs-Overhead, keine Inferenz.\r\n\r\n");
+    printf("\r\n*** IDLE LOOP (P4-A): the runtime layer is NOT called.\r\n");
+    printf("*** The times below are instrumentation overhead, not inference.\r\n\r\n");
 #endif
 
     printf("Running %d inferences for profiling...\r\n", inference_count);
@@ -381,13 +381,8 @@ void STM32CubeAI_Studio_AI_Process(void)
     report_hal = inter_hal_finalize_statistic_inference_duration();
     stm_inference_profiler_finalize(&report_prof); /* war: einzelne Getter */
 
-    /* --- Ausgabe (jetzt mit Median + Stddev, analog PSoC) --- */
-    printf("\n***************************************************");
-    printf("\r\nInference statistics (inter_hal):\r\n");
-    printf("count=%u  min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
-            (unsigned int) report_hal.inference_count, report_hal.min_time_ms,
-            report_hal.max_time_ms, report_hal.average_time_ms,
-            report_hal.median_time_ms, report_hal.stddev_time_ms);
+    /* Gesamtfenster gemeinsam, die Bloecke darunter plattformeigen. */
+    inter_hal_print_statistic(report_hal);
 
     printf("\r\nInference statistics (stm_inference_profiler):\r\n");
     printf("Total : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
@@ -395,19 +390,19 @@ void STM32CubeAI_Studio_AI_Process(void)
             report_prof.total.average_ms, report_prof.total.median_ms,
             report_prof.total.stddev_ms);
     printf(
-            "EC/NPU: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u Bloecke)\r\n",
+            "EC/NPU: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u blocks)\r\n",
             report_prof.ec.min_ms, report_prof.ec.max_ms,
             report_prof.ec.average_ms, report_prof.ec.median_ms,
             report_prof.ec.stddev_ms,
             (unsigned int) report_prof.ec.block_count);
     printf(
-            "Hybrid: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u Bloecke)\r\n",
+            "Hybrid: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u blocks)\r\n",
             report_prof.hybrid.min_ms, report_prof.hybrid.max_ms,
             report_prof.hybrid.average_ms, report_prof.hybrid.median_ms,
             report_prof.hybrid.stddev_ms,
             (unsigned int) report_prof.hybrid.block_count);
     printf(
-            "SW    : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u Bloecke)\r\n",
+            "SW    : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (%u blocks)\r\n",
             report_prof.sw.min_ms, report_prof.sw.max_ms,
             report_prof.sw.average_ms, report_prof.sw.median_ms,
             report_prof.sw.stddev_ms,
@@ -416,12 +411,12 @@ void STM32CubeAI_Studio_AI_Process(void)
     /* Anteile ausserhalb jedes Epochenblocks. Zusammen mit den Kanaelen oben
      * ergibt sich die Gesamtzeit vollstaendig. */
     printf(
-            "Eingang: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
+            "Input : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
             report_prof.input.min_ms, report_prof.input.max_ms,
             report_prof.input.average_ms, report_prof.input.median_ms,
             report_prof.input.stddev_ms);
     printf(
-            "Rest   : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
+            "Rest  : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms\r\n",
             report_prof.rest.min_ms, report_prof.rest.max_ms,
             report_prof.rest.average_ms, report_prof.rest.median_ms,
             report_prof.rest.stddev_ms);
@@ -429,21 +424,21 @@ void STM32CubeAI_Studio_AI_Process(void)
     /* Beschleunigungssegment der Bloecke (POST_START..PRE_END). Nur dieses ist
      * mit dem PMU-Zaehlfenster des Ethos-U55 auf dem PSoC vergleichbar; die
      * Zeilen darueber enthalten zusaetzlich die CPU-Arbeit der Runtime. */
-    printf("\r\nDavon Beschleunigungssegment (POST_START..PRE_END):\r\n");
+    printf("\r\nAcceleration segment thereof (POST_START..PRE_END):\r\n");
     printf(
-            "EC/NPU: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU-Anteil %.3f ms)\r\n",
+            "EC/NPU: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU share %.3f ms)\r\n",
             report_prof.ec_wait.min_ms, report_prof.ec_wait.max_ms,
             report_prof.ec_wait.average_ms, report_prof.ec_wait.median_ms,
             report_prof.ec_wait.stddev_ms,
             report_prof.ec.average_ms - report_prof.ec_wait.average_ms);
     printf(
-            "Hybrid: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU-Anteil %.3f ms)\r\n",
+            "Hybrid: min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU share %.3f ms)\r\n",
             report_prof.hybrid_wait.min_ms, report_prof.hybrid_wait.max_ms,
             report_prof.hybrid_wait.average_ms, report_prof.hybrid_wait.median_ms,
             report_prof.hybrid_wait.stddev_ms,
             report_prof.hybrid.average_ms - report_prof.hybrid_wait.average_ms);
     printf(
-            "SW    : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU-Anteil %.3f ms)\r\n",
+            "SW    : min=%.3f  max=%.3f  avg=%.3f  mdn=%.3f  std=%.3f ms  (CPU share %.3f ms)\r\n",
             report_prof.sw_wait.min_ms, report_prof.sw_wait.max_ms,
             report_prof.sw_wait.average_ms, report_prof.sw_wait.median_ms,
             report_prof.sw_wait.stddev_ms,
