@@ -24,17 +24,17 @@
  *
  * Command Line options:
  * --load-mdesc-file = "/opt/ST/STEdgeAI/2.2/Utilities/configs/stm32n6"
- * --load-mpool-file = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/memory_pool"
+ * --load-mpool-file = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/memory_pool"
  * --cache-maintenance = true
  * --enable-virtual-mem-pools = true
  * --native-float = true
- * --json-quant-file = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0_Q.json"
+ * --json-quant-file = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0_Q.json"
  * --Os = true
  * --Ocache-opt = true
  * --enable-epoch-controller = true
  * --output-info-file = "c_info"
- * --onnx-input = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0.onnx"
- * --out-dir-prefix = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_ws/neural_art__network/"
+ * --onnx-input = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0.onnx"
+ * --out-dir-prefix = "/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_ws/neural_art__network/"
  * --mvei = true
  * --Oauto-sched = true
  *
@@ -57,23 +57,23 @@
 #  define LL_ATON_DBG_BUFFER_INFO_EXCLUDED 0
 #endif
 
+/* global pool 11 is 1.54 MB */
+/* index=11 file postfix=AXISRAM3_AXISRAM4_AXISRAM5_AXISRAM6 name=npuRAM3_npuRAM4_npuRAM5_npuRAM6 offset=0x34200000  absolute_mode size=1835000 vpool READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=19.006 write_power=16.201 use4initializers=YES score=95  */
+/* global pool 1 is 448.00 KB */
+/* index=1 file postfix=AXISRAM5 name=npuRAM5 offset=0x342e0000  absolute_mode size=458752 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=18.531 write_power=16.201 use4initializers=YES score=94  */
+/* global pool 0 is 238.05 KB */
+/* index=0 file postfix=AXISRAM6 name=npuRAM6 offset=0x34350000  absolute_mode size=458744 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=19.006 write_power=15.79 use4initializers=YES score=94  */
 /* global pool 7 is ? */
-/* index=7 file postfix=xSPI1 name=hyperRAM offset=0x90000000  absolute_mode size=33554424 READ_WRITE THROUGHPUT=MID LATENCY=HIGH byte width=2 freq ratio=5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=ON read_power=380 write_power=340 use4initializers=YES score=82  */
+/* index=7 file postfix=xSPI1 name=hyperRAM offset=0x90000000  absolute_mode size=0 READ_WRITE THROUGHPUT=MID LATENCY=HIGH byte width=2 freq ratio=5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=ON read_power=380 write_power=340 use4initializers=YES score=82  */
 /* global pool 8 is 16.39 MB */
 /* index=8 file postfix=xSPI2 name=octoFlash offset=0x71000000  relative_mode size=117440512 READ_ONLY THROUGHPUT=MID LATENCY=HIGH byte width=1 freq ratio=6 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=ON read_power=110 write_power=400 use4initializers=YES score=50  */
 extern unsigned char _mem_pool_xSPI2_Default[]; /* [17181905]; */
-/* global pool 1 is 445.61 KB */
-/* index=1 file postfix=AXISRAM5 name=npuRAM5 offset=0x342e0000  absolute_mode size=458752 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=18.531 write_power=16.201 use4initializers=NO score=94  */
-/* global pool 2 is 439.46 KB */
+/* global pool 2 is 448.00 KB */
 /* index=2 file postfix=AXISRAM4 name=npuRAM4 offset=0x34270000  absolute_mode size=458752 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=18.531 write_power=16.201 use4initializers=NO score=94  */
-/* global pool 3 is 175.78 KB */
+/* global pool 3 is 448.00 KB */
 /* index=3 file postfix=AXISRAM3 name=npuRAM3 offset=0x34200000  absolute_mode size=458752 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=18.531 write_power=16.201 use4initializers=NO score=94  */
-/* global pool 0 is ? */
-/* index=0 file postfix=AXISRAM6 name=npuRAM6 offset=0x34350000  absolute_mode size=458744 READ_WRITE THROUGHPUT=HIGH LATENCY=LOW byte width=8 freq ratio=1.25 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=19.006 write_power=15.79 use4initializers=NO score=94  */
-/* global pool 11 is 2.31 MB */
-/* index=11 file postfix=AXISRAM2_AXISRAM3_AXISRAM4_AXISRAM5_AXISRAM6 name=cpuRAM2_npuRAM3_npuRAM4_npuRAM5_npuRAM6 offset=0x34100000  absolute_mode size=2883576 vpool READ_WRITE THROUGHPUT=MID LATENCY=MID byte width=8 freq ratio=2.5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=19.006 write_power=16.201 use4initializers=NO score=85  */
-/* global pool 4 is 878.91 KB */
-/* index=4 file postfix=AXISRAM2 name=cpuRAM2 offset=0x34100000  absolute_mode size=1048576 READ_WRITE THROUGHPUT=MID LATENCY=MID byte width=8 freq ratio=2.5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=17.324 write_power=15.321 use4initializers=NO score=84  */
+/* global pool 4 is ? */
+/* index=4 file postfix=AXISRAM2 name=cpuRAM2 offset=0x34100000  absolute_mode size=0 READ_WRITE THROUGHPUT=MID LATENCY=MID byte width=8 freq ratio=2.5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=17.324 write_power=15.321 use4initializers=NO score=84  */
 /* global pool 5 is ? */
 /* index=5 file postfix=AXISRAM1 name=cpuRAM1 offset=0x34064000  absolute_mode size=0 READ_WRITE THROUGHPUT=MID LATENCY=MID byte width=8 freq ratio=2.5 burst max length=MAXINT burst penalty=0 pipelined=ON cacheable=OFF read_power=16.616 write_power=14.522 use4initializers=NO score=84  */
 /* global pool 6 is ? */
@@ -118,10 +118,10 @@ static void _ec_blob_cache_start_func_1(const void *epoch_block) {
   LL_ATON_LIB_UNUSED(epoch_block);
 
   /* *** MCU cache invalidate (only) operation (HW, whole range) *** */
-  /*     memory pool: 1 */
-  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 331136))) */
-  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332160))) */
-  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 331136))) /* Equivalent hex address = 0x34330d80UL */, 1024);
+  /*     memory pool: 11 */
+  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1024))) */
+  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 2048))) */
+  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1024))) /* Equivalent hex address = 0x34200400UL */, 1024);
 
 };
 
@@ -133,22 +133,16 @@ static void LL_ATON_End_EpochBlock_164(const void *epoch_block)
   LL_ATON_LIB_UNUSED(epoch_block);
 
   /* *** MCU cache invalidate (only) operation for unaligned buffer end address (last line) *** */
-  /*     memory pool: 1 */
-  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 1024))) */
-  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 1056))) */
-  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 1024))) /* Equivalent hex address = 0x342e0400UL */, 32);
-
-  /* *** MCU cache invalidate (only) operation for unaligned buffer start address (first line) *** */
-  /*     memory pool: 1 */
-  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332128))) */
-  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332160))) */
-  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332128))) /* Equivalent hex address = 0x34331160UL */, 32);
+  /*     memory pool: 11 */
+  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1024))) */
+  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1056))) */
+  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1024))) /* Equivalent hex address = 0x34200400UL */, 32);
 
   /* *** MCU cache invalidate (only) operation for unaligned buffer end address (last line) *** */
-  /*     memory pool: 1 */
-  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 333120))) */
-  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 333152))) */
-  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 333120))) /* Equivalent hex address = 0x34331540UL */, 32);
+  /*     memory pool: 11 */
+  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 3040))) */
+  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 3072))) */
+  LL_ATON_Cache_MCU_Invalidate_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 3040))) /* Equivalent hex address = 0x34200be0UL */, 32);
 
 
 /* Unit= 27 [PROCESSOR 0] */
@@ -164,7 +158,7 @@ static void LL_ATON_End_EpochBlock_164(const void *epoch_block)
     .general.input.stride.h = 1000,
     .general.input.stride.w = 1,
     .general.input.stride.c = 1,
-    .general.input.mem.start_offset = ((unsigned char *)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 331136))) /* Equivalent hex address = 0x34330d80UL */,
+    .general.input.mem.start_offset = ((unsigned char *)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1040))) /* Equivalent hex address = 0x34200410UL */,
     .general.input.format.is_signed = 1,
     /* "is" tensor-related info: */
     .is.mem.start_offset = ((unsigned char *)((((uintptr_t)(_mem_pool_xSPI2_Default)) + 17181856))) /* Equivalent hex offset = 0x1062ca0 */,
@@ -192,7 +186,7 @@ static void LL_ATON_End_EpochBlock_164(const void *epoch_block)
     .scratch.stride.h = 1028,
     .scratch.stride.w = 4,
     .scratch.stride.c = 4,
-    .scratch.mem.start_offset = ((unsigned char *)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 0))) /* Equivalent hex address = 0x342e0000UL */,
+    .scratch.mem.start_offset = ((unsigned char *)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 0))) /* Equivalent hex address = 0x34200000UL */,
     .scratch.format.is_signed = 1,
     /* "general.output" tensor-related info: */
     .general.output.dim.tensor_b = 1,
@@ -204,7 +198,7 @@ static void LL_ATON_End_EpochBlock_164(const void *epoch_block)
     .general.output.stride.h = 1000,
     .general.output.stride.w = 1,
     .general.output.stride.c = 1,
-    .general.output.mem.start_offset = ((unsigned char *)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332144))) /* Equivalent hex address = 0x34331170UL */,
+    .general.output.mem.start_offset = ((unsigned char *)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 2048))) /* Equivalent hex address = 0x34200800UL */,
     .general.output.format.is_signed = 1,
     /* Node-specific Hyper-parameters: */
     .quantized_multiplier = 1812274944,
@@ -218,16 +212,16 @@ static void LL_ATON_End_EpochBlock_164(const void *epoch_block)
   /* Node Softmax_1019 mapped on EmbedNets (INTEGER) as Softmax | Category: Computational */
   ll_sw_forward_softmax_integer(&softmax_integer1_sw_info);
   /* *** MCU cache clean (only) operation (SW, whole range) *** */
-  /*     memory pool: 1 */
-  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 0))) */
-  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 1056))) */
-  LL_ATON_Cache_MCU_Clean_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 0))) /* Equivalent hex address = 0x342e0000UL */, 1056);
+  /*     memory pool: 11 */
+  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 0))) */
+  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 1056))) */
+  LL_ATON_Cache_MCU_Clean_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 0))) /* Equivalent hex address = 0x34200000UL */, 1056);
 
   /* *** MCU cache clean (only) operation (SW, whole range) *** */
-  /*     memory pool: 1 */
-  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332128))) */
-  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 333152))) */
-  LL_ATON_Cache_MCU_Clean_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x342e0000UL + 332128))) /* Equivalent hex address = 0x34331160UL */, 1024);
+  /*     memory pool: 11 */
+  /*     start: ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 2048))) */
+  /*     end:   ((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 3072))) */
+  LL_ATON_Cache_MCU_Clean_Range(((uintptr_t)(ATON_LIB_PHYSICAL_TO_VIRTUAL_ADDR(0x34200000UL + 2048))) /* Equivalent hex address = 0x34200800UL */, 1024);
 
 }
 
@@ -658,7 +652,7 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Input_Buffers_Info_Default(void)
   static const LL_Buffer_InfoTypeDef buff_info[] = {
     {
       .name = "Input_0_out_0",
-      .addr_base = {(unsigned char *)(0x342e0000UL) /* Equivalent hex address = 0x342e0000UL */},
+      .addr_base = {(unsigned char *)(0x34200000UL) /* Equivalent hex address = 0x34200000UL */},
       .offset_start = 0,
       .offset_end = 270000,
       .offset_limit = 270064,
@@ -6549,10 +6543,10 @@ const LL_Buffer_InfoTypeDef *LL_ATON_Output_Buffers_Info_Default(void)
   static const LL_Buffer_InfoTypeDef buff_info[] = {
     {
       .name = "Quantize_1020_out_0",
-      .addr_base = {(unsigned char *)(0x342e0000UL) /* Equivalent hex address = 0x342e0000UL */},
-      .offset_start = 332144,
-      .offset_end = 333144,
-      .offset_limit = 333208,
+      .addr_base = {(unsigned char *)(0x34200000UL) /* Equivalent hex address = 0x34200000UL */},
+      .offset_start = 2048,
+      .offset_end = 3048,
+      .offset_limit = 3112,
       .is_user_allocated = 0,
       .is_param = 0,
       .epoch = 164,

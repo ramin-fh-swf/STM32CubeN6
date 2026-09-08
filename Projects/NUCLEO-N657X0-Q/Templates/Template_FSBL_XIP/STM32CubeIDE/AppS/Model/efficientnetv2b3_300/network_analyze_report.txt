@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-06-15 20:34:28
-Parameters            : analyze --model /home/rama/dev_own/ai-thesis/eval/1_models/efficientnetv2b3_300/models/efficientnetv2b3_300_int8_i8in.tflite --batch-size 10 --mode host --st-neural-art user_profile@/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/profile-neural-art.json --name network --verbosity 1 --c-api legacy --target stm32n6 --workspace /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_ws --output /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_output
+Created date          : 2026-09-08 21:37:03
+Parameters            : analyze --model /home/rama/dev_own/ai-thesis/eval/1_models/efficientnetv2b3_300/models/efficientnetv2b3_300_int8_i8in.tflite --batch-size 10 --mode host --st-neural-art user_profile@/home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/profile-neural-art.json --name network --verbosity 1 --c-api legacy --target stm32n6 --workspace /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_ws --output /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_output
 
 Model name - efficientnetv2b3_300_int8_i8in
 ------ -------------------------------- ------------------------ --------------------- ------------- -------------------------- 
@@ -1027,31 +1027,31 @@ model: macc=3,175,992,744 weights=14,544,848 activations=-- io=--
 Compilation details
 ------------------------------------------------------------------------------------
 Compiler version: 1.1.1-14
-Compiler arguments:  -i /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0.onnx --json-quant-file /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0_Q.json -g network.c --load-mdesc /opt/ST/STEdgeAI/2.2/Utilities/configs/stm32n6.mdesc --load-mpool /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/memory_pool.mpool --save-mpool-file /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_ws/neural_art__network/memory_pool.mpool --out-dir-prefix /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-4/.ai/st_ai_ws/neural_art__network/ --native-float --mvei --cache-maintenance --Ocache-opt --enable-virtual-mem-pools --Os --Oauto-sched --enable-epoch-controller --output-info-file c_info.json
+Compiler arguments:  -i /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0.onnx --json-quant-file /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_output/efficientnetv2b3_300_int8_i8in_OE_3_3_0_Q.json -g network.c --load-mdesc /opt/ST/STEdgeAI/2.2/Utilities/configs/stm32n6.mdesc --load-mpool /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/memory_pool.mpool --save-mpool-file /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_ws/neural_art__network/memory_pool.mpool --out-dir-prefix /home/rama/STM32CubeAi/efficientnetv2b3_300/.ai/run/run-7/.ai/st_ai_ws/neural_art__network/ --native-float --mvei --cache-maintenance --Ocache-opt --enable-virtual-mem-pools --Os --Oauto-sched --enable-epoch-controller --output-info-file c_info.json
 ====================================================================================
 
 Memory usage information  (input/output buffers are included in activations)
 ------------------------------------------------------------------------------------
 	flexMEM    [0x34000000 - 0x34000000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
 	cpuRAM1    [0x34064000 - 0x34064000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
-	cpuRAM2    [0x34100000 - 0x34200000]:    878.906 kB /      1.000 MB  ( 85.83 % used) -- weights:          0  B (  0.00 % used)  activations:    878.906 kB ( 85.83 % used)
-	npuRAM3    [0x34200000 - 0x34270000]:    175.781 kB /    448.000 kB  ( 39.24 % used) -- weights:          0  B (  0.00 % used)  activations:    175.781 kB ( 39.24 % used)
-	npuRAM4    [0x34270000 - 0x342E0000]:    439.461 kB /    448.000 kB  ( 98.09 % used) -- weights:          0  B (  0.00 % used)  activations:    439.461 kB ( 98.09 % used)
-	npuRAM5    [0x342E0000 - 0x34350000]:    445.609 kB /    448.000 kB  ( 99.47 % used) -- weights:          0  B (  0.00 % used)  activations:    445.609 kB ( 99.47 % used)
-	npuRAM6    [0x34350000 - 0x343C0000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	cpuRAM2    [0x34100000 - 0x34100000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	npuRAM3    [0x34200000 - 0x34270000]:    448.000 kB /    448.000 kB  (100.00 % used) -- weights:          0  B (  0.00 % used)  activations:    448.000 kB (100.00 % used)
+	npuRAM4    [0x34270000 - 0x342E0000]:    448.000 kB /    448.000 kB  (100.00 % used) -- weights:          0  B (  0.00 % used)  activations:    448.000 kB (100.00 % used)
+	npuRAM5    [0x342E0000 - 0x34350000]:    448.000 kB /    448.000 kB  (100.00 % used) -- weights:          0  B (  0.00 % used)  activations:    448.000 kB (100.00 % used)
+	npuRAM6    [0x34350000 - 0x343C0000]:    238.055 kB /    448.000 kB  ( 53.14 % used) -- weights:          0  B (  0.00 % used)  activations:    238.055 kB ( 53.14 % used)
 	octoFlash  [0x71000000 - 0x78000000]:     16.386 MB /    112.000 MB  ( 14.63 % used) -- weights:     16.386 MB ( 14.63 % used)  activations:          0  B (  0.00 % used)
-	hyperRAM   [0x90000000 - 0x92000000]:          0  B /     32.000 MB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	hyperRAM   [0x90000000 - 0x90000000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
 ---
-Total:                                            18.280 MB                                  -- weights:     16.386 MB                  activations:      1.894 MB                   
+Total:                                            17.931 MB                                  -- weights:     16.386 MB                  activations:      1.545 MB                   
 ====================================================================================
 
 
 Used memory ranges
 ------------------------------------------------------------------------------------
-	cpuRAM2    [0x34100000 - 0x34200000]: 0x34100000-0x341DBBA0
-	npuRAM3    [0x34200000 - 0x34270000]: 0x34200000-0x3422BF20
-	npuRAM4    [0x34270000 - 0x342E0000]: 0x34270000-0x342DDDE0
-	npuRAM5    [0x342E0000 - 0x34350000]: 0x342E0000-0x3434F670
+	npuRAM3    [0x34200000 - 0x34270000]: 0x34200000-0x34270000
+	npuRAM4    [0x34270000 - 0x342E0000]: 0x34270000-0x342E0000
+	npuRAM5    [0x342E0000 - 0x34350000]: 0x342E0000-0x34350000
+	npuRAM6    [0x34350000 - 0x343C0000]: 0x34350000-0x3438B840
 	octoFlash  [0x71000000 - 0x78000000]: 0x71000000-0x72062CE0
 ====================================================================================
 
