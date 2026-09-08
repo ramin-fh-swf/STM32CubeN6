@@ -43,7 +43,7 @@ void rm_ai_lenet5_preprocess(const NN_Instance_TypeDef *nn_instance)
     uint32_t buffer_len = LL_Buffer_len(inputBuffersInfos); // should be 28*28 = 784 for lenet5
 
     memset(buffer_in, 0, buffer_len);
-    memcpy(buffer_in, mnist_input_label_7, 784);
+    memcpy(buffer_in, mnist_input_label_8, 784);
     SCB_CleanDCache_by_Addr((uint32_t *)buffer_in, buffer_len);
 }
 
